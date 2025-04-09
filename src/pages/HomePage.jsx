@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useState, useEffect } from "react";
 import Card from "../components/Card";
+import { Link } from "react-router-dom";
 
 export default function Homepage() {
 	const { products, handleClick, isLiked, productLiked, isProductLiked } =
@@ -47,12 +48,16 @@ export default function Homepage() {
 
 	return (
 		<div className="container mt-4 mb-5">
-			<h1>Confronta uno o più dispositivi tra loro</h1>
+			<h1>Scopri i migliori smartphone del momento</h1>
 			<h3>
 				Dai un'occhiata a come si confrontano le caratteristiche tra i vari
-				smartphone, ti aiuteremo a scegliere il telefono perfetto per te. Vai
-				alla sezione dedicata o seleziona i prodotti dalla lista.
+				smartphone!
 			</h3>
+			<h3>Ti aiuteremo a scegliere il telefono perfetto per te.</h3>
+			<Link to="/compareProducts">
+				<h3>Vai alla sezione dedicata &#8594;</h3>
+			</Link>
+
 			<div className="d-flex mt-3">
 				<input
 					className="me-2"

@@ -8,7 +8,7 @@ import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 export default function Card({ prop }) {
 	const { products, handleClick, isProductLiked } = useContext(GlobalContext);
 	return (
-		<div className="card border-black">
+		<div className="card homepage-card h-100">
 			<h5 className="card-title mt-2">
 				{prop.title}, {prop.brand}
 			</h5>

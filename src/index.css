@@ -6,7 +6,7 @@ li {
 	list-style: none;
 }
 
-.card:hover {
+.homepage-card:hover {
 	background-color: lightgray;
 }
 

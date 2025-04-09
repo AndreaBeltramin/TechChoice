@@ -30,14 +30,15 @@ export default function Header() {
 								Home
 							</NavLink>
 						</li>
-						<li className="nav-item">
-							<NavLink to="/compareProducts" className="nav-link" href="#">
-								Confronta i prodotti
-							</NavLink>
-						</li>
+
 						<li className="nav-item">
 							<NavLink to="/likedProducts" className="nav-link" href="#">
 								Prodotti preferiti
+							</NavLink>
+						</li>
+						<li className="nav-item">
+							<NavLink to="/compareProducts" className="nav-link" href="#">
+								Confronta i prodotti
 							</NavLink>
 						</li>
 					</ul>

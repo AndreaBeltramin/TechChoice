@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Card from "../components/Card";
 
 export default function DetailPage() {
 	const { id } = useParams();
@@ -13,26 +14,13 @@ export default function DetailPage() {
 	selectedSmartphone = products.find((p) => p.title === selectedProduct);
 	console.log(selectedSmartphone);
 
-	// const [isChecked, setIsChecked] = useState(false);
-	// function isProductChecked() {
-	// 	if (isChecked) {
-	// 		setIsChecked(false);
-	// 		console.log("Il prodotto non è selezionato");
-	// 		setOpenSidebar(true);
-	// 	} else {
-	// 		setIsChecked(true);
-	// 		console.log("Il prodotto è selezionato");
-	// 	}
-	// }
-
 	const productDetail = products.find((p) => p.id === parseInt(id));
 	return (
 		<div className="container mt-4">
 			<section>
-				<h1>{productDetail.title}</h1>
 				<div className="row">
-					<div className="col-4">
-						<img src={productDetail.image} alt={productDetail.title} />
+					<div className="col-4 text-center">
+						<Card prop={productDetail} />
 					</div>
 
 					<div className="col-8">
@@ -46,7 +34,7 @@ export default function DetailPage() {
 				</div>
 			</section>
 			<section>
-				<h3>Caratteristiche tecniche: </h3>
+				<h3 className="mt-4">Caratteristiche tecniche: </h3>
 				<table className="table">
 					<tbody>
 						<tr>
