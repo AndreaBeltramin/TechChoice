@@ -1,13 +1,11 @@
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import Card from "../components/Card";
 
 export default function Homepage() {
-	const { products } = useContext(GlobalContext);
+	const { products, handleClick, isLiked, productLiked, isProductLiked } =
+		useContext(GlobalContext);
 	const [searchQuery, setSearchQuery] = useState("");
 	//select delle categorie
 	const [selectedCategory, setSelectedCategory] = useState(
@@ -30,7 +28,6 @@ export default function Homepage() {
 			p.title.toLowerCase().includes(searchQuery.toLowerCase());
 		return isCategoryMatch && isSearchMatch;
 	});
-	console.log(filteredProducts);
 
 	//prodotti filtrati e ordinati secondo le varie opzioni
 	const sortedProducts = filteredProducts.sort((a, b) => {
@@ -47,6 +44,7 @@ export default function Homepage() {
 			return b.price - a.price;
 		}
 	});
+
 	return (
 		<div className="container mt-4 mb-5">
 			<h1>Confronta uno o più dispositivi tra loro</h1>
@@ -72,7 +70,7 @@ export default function Homepage() {
 					<option defaultValue="Seleziona una categoria">
 						Seleziona una categoria
 					</option>
-					<option value="Cellulari">Cellulari</option>
+					<option value="Smartphone">Smartphone</option>
 					<option value="Tablet">Tablet</option>
 					<option value="Computer">Computer</option>
 				</select>
@@ -97,29 +95,9 @@ export default function Homepage() {
 				//mostro i prodotti filtrati
 				<div className="row row-cols-3 d-flex">
 					{sortedProducts.map((p) => (
-						<Link
-							to={`/products/${p.id}`}
-							key={p.id}
-							className="col g-4 text-center"
-						>
-							<div className="card border-black">
-								<div className="card-body">
-									<h5 className="card-title">
-										{p.title}, {p.brand}
-									</h5>
-									<h6 className="card-subtitle mb-2 text-body-secondary">
-										<p>
-											{p.release_year}, {p.price} euro
-										</p>
-									</h6>
-									<span>
-										<FontAwesomeIcon icon={solidHeart} />
-										<FontAwesomeIcon icon={regularHeart} />
-									</span>
-									<img src={p.image} alt={p.title} />
-								</div>
-							</div>
-						</Link>
+						<div key={p.id} className="col g-4 text-center">
+							<Card prop={p} />
+						</div>
 					))}
 				</div>
 			) : (
