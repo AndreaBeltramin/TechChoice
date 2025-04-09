@@ -1,3 +1,15 @@
+.logo {
+	width: 50px;
+	height: 50px;
+}
+
+.navbar {
+	background-color: rgb(110, 109, 109) !important;
+}
+
+.navbar a {
+	color: white;
+}
 a {
 	text-decoration: none;
 }

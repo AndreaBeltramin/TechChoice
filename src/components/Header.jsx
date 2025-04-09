@@ -4,9 +4,9 @@ export default function Header() {
 	return (
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
 			<div className="container-fluid">
-				<a className="navbar-brand" href="#">
-					Logo sito
-				</a>
+				<div className="navbar-brand">
+					<img src="./logo1.svg" alt="logo" className="logo" />
+				</div>
 				<button
 					className="navbar-toggler"
 					type="button"
@@ -21,12 +21,7 @@ export default function Header() {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
 						<li className="nav-item">
-							<NavLink
-								to="/"
-								className="nav-link active"
-								aria-current="page"
-								href="#"
-							>
+							<NavLink to="/" className="nav-link" aria-current="page" href="#">
 								Home
 							</NavLink>
 						</li>
