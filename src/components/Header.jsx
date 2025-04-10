@@ -5,7 +5,7 @@ export default function Header() {
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
 			<div className="container-fluid">
 				<div className="navbar-brand">
-					<img src="./logo1.svg" alt="logo" className="logo" />
+					<img src="/logo1.svg" alt="logo" className="logo" />
 				</div>
 				<button
 					className="navbar-toggler"

@@ -9,30 +9,41 @@ export default function ComparisonCard({ prop }) {
 	const { handleClick, isProductLiked } = useContext(GlobalContext);
 	return (
 		<div className="card h-100 ">
-			<h5 className="card-title mt-2">
-				{prop.title}, {prop.brand}
-			</h5>
-			<h6 className="card-subtitle text-body-secondary">
-				{prop.release_year}, <strong>{prop.price} euro</strong>
-			</h6>
-			<div className="mt-3">
-				<Link to={`/products/${prop.id}`}>
-					<button className="btn btn-primary">Vai alla scheda completa</button>
-				</Link>
+			<div className="row">
+				<div className="col-11">
+					<h5 className="card-title mt-2">
+						{prop.title}, {prop.brand}
+					</h5>
+					<h6 className="card-subtitle text-body-secondary">
+						{prop.release_year}, <strong>{prop.price} euro</strong>
+					</h6>
+					<div className="mt-3">
+						<Link to={`/products/${prop.id}`}>
+							<button className="btn btn-primary mb-2">
+								Vai alla scheda completa
+							</button>
+						</Link>
+					</div>
+				</div>
+				<div className="col">
+					{
+						<span
+							className="heart mt-2 me-2"
+							onClick={() => handleClick(prop.id)}
+						>
+							<FontAwesomeIcon
+								icon={isProductLiked(prop.id) ? solidHeart : regularHeart}
+								className="fa-xl"
+							/>
+						</span>
+					}
+				</div>
 			</div>
 
 			<div>
-				<img src={prop.image} alt={prop.title} />
+				<img src={prop.image} alt={prop.title} className="img-fluid" />
 			</div>
 
-			{
-				<span className="heart mt-2 me-2" onClick={() => handleClick(prop.id)}>
-					<FontAwesomeIcon
-						icon={isProductLiked(prop.id) ? solidHeart : regularHeart}
-						className="fa-xl"
-					/>
-				</span>
-			}
 			<div className="card-body text-start">
 				<ul>
 					<li>

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -6,7 +6,8 @@ import Card from "../components/Card";
 
 export default function DetailPage() {
 	const { id } = useParams();
-	const { products } = useContext(GlobalContext);
+	const { products, showProduct, product } = useContext(GlobalContext);
+	console.log(product);
 
 	const [selectedProduct, setSelectedProduct] = useState("");
 	console.log(selectedProduct);
@@ -14,15 +15,21 @@ export default function DetailPage() {
 	selectedSmartphone = products.find((p) => p.title === selectedProduct);
 	console.log(selectedSmartphone);
 
-	const productDetail = products.find((p) => p.id === parseInt(id));
+	// const productDetail = products.find((p) => p.id === parseInt(id));
+	const productDetail = product;
+
+	useEffect(() => {
+		showProduct(id);
+	}, []);
+
 	return (
-		<div className="container mt-4">
+		<div className="container my-4">
+			{/* sezione immagine e descrizione */}
 			<section>
 				<div className="row">
 					<div className="col-4 text-center">
 						<Card prop={productDetail} />
 					</div>
-
 					<div className="col-8">
 						{productDetail.description && (
 							<div>
@@ -33,40 +40,50 @@ export default function DetailPage() {
 					</div>
 				</div>
 			</section>
+
+			{/* sezione caratteristiche tecniche */}
 			<section>
 				<h3 className="mt-4">Caratteristiche tecniche: </h3>
-				<table className="table">
-					<tbody>
-						<tr>
-							<th scope="row">Tipo di prodotto</th>
-							<td>{productDetail.category}</td>
-						</tr>
-						<tr>
-							<th scope="row">Sistema operativo</th>
-							<td>{productDetail.operating_system}</td>
-						</tr>
-						<tr>
-							<th scope="row">Capacità di memoria</th>
-							<td>{productDetail.storage}</td>
-						</tr>
-						<tr>
-							<th scope="row">Anno di uscita</th>
-							<td>{productDetail.release_year}</td>
-						</tr>
-						<tr>
-							<th scope="row">Display</th>
-							<td>{productDetail.display}</td>
-						</tr>
-						<tr>
-							<th scope="row">Camera</th>
-							<td>{productDetail.cameras}</td>
-						</tr>
-						<tr>
-							<th scope="row">Porta di ricarica</th>
-							<td>{productDetail.port}</td>
-						</tr>
-					</tbody>
-				</table>
+				<div className="my-2">
+					{/* {Object.keys(productDetail).map((key) => {
+						console.log(key, productDetail[key]);
+						if (key === "title" || key === "id" || key === "image") return;
+						return (
+							<div>
+								<span className="fs-5">{key} : </span className="fs-5">
+								<p>{productDetail[key]}</p>
+							</div>
+						);
+					})} */}
+					<div className="my-1">
+						<span className="h5">Tipo di prodotto: </span>
+						<span>{productDetail.category}</span>
+					</div>
+					<div className="my-1">
+						<span className="h5">Sistema operativo: </span>
+						<span>{productDetail.operating_system}</span>
+					</div>
+					<div className="my-1">
+						<span className="h5">Capacità di memoria: </span>
+						<span>{productDetail.storage}</span>
+					</div>
+					<div className="my-1">
+						<span className="h5">Anno di uscita: </span>
+						<span>{productDetail.release_year}</span>
+					</div>
+					<div className="my-1">
+						<span className="h5">Display: </span>
+						<span>{productDetail.display}</span>
+					</div>
+					<div className="my-1">
+						<span className="h5">Camera: </span>
+						<span>{productDetail.cameras}</span>
+					</div>
+					<div className="my-1">
+						<span className="h5">Porta di ricarica: </span>
+						<span>{productDetail.port}</span>
+					</div>
+				</div>
 			</section>
 
 			<a
@@ -86,9 +103,9 @@ export default function DetailPage() {
 				aria-labelledby="offcanvasConfrontoLabel"
 			>
 				<div className="offcanvas-header">
-					<h5 className="offcanvas-title" id="offcanvasConfrontoLabel">
+					<span className="offcanvas-title" id="offcanvasConfrontoLabel">
 						Seleziona un altro {productDetail.category} per fare il confronto
-					</h5>
+					</span>
 					<button
 						type="button"
 						className="btn-close"
@@ -97,10 +114,14 @@ export default function DetailPage() {
 					></button>
 				</div>
 				<div className="offcanvas-body">
-					<div className="row d-flex flex-direction-column">
-						<div className="col text-center">{productDetail.title}</div>
-						<div className="col">
-							<img src={productDetail.image} alt={productDetail.title} />
+					<div className="row canvas-row">
+						<div className="col text-center mb-2">{productDetail.title}</div>
+						<div className="col d-flex justify-content-center">
+							<img
+								src={productDetail.image}
+								alt={productDetail.title}
+								className="w-75"
+							/>
 						</div>
 					</div>
 					<div className="d-flex justify-content-center">
@@ -109,7 +130,7 @@ export default function DetailPage() {
 							onChange={(e) => {
 								setSelectedProduct(e.target.value);
 							}}
-							className="p-2 "
+							className="p-2 mt-2"
 						>
 							<option defaultValue="Seleziona uno smartphone">
 								Seleziona uno smartphone
@@ -121,12 +142,13 @@ export default function DetailPage() {
 					</div>
 
 					{selectedSmartphone !== undefined ? (
-						<div className="row d-flex flex-direction-column mt-4">
+						<div className="row canvas-row mt-4">
 							<div className="col text-center">{selectedSmartphone.title}</div>
-							<div className="col">
+							<div className="col d-flex justify-content-center">
 								<img
 									src={selectedSmartphone.image}
 									alt={selectedSmartphone.title}
+									className="w-75"
 								/>
 							</div>
 						</div>
@@ -139,7 +161,7 @@ export default function DetailPage() {
 							to="/compareProducts"
 							state={{ product1: productDetail, product2: selectedSmartphone }}
 						>
-							<button className="btn btn-primary mt-4 " type="button">
+							<button className="btn btn-primary mt-2 " type="button">
 								Vai al confronto
 							</button>
 						</Link>

@@ -1,22 +1,34 @@
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useState, useEffect } from "react";
-import Card from "../components/Card";
 import { Link } from "react-router-dom";
+import Card from "../components/Card";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Homepage() {
-	const { products, handleClick, isLiked, productLiked, isProductLiked } =
-		useContext(GlobalContext);
+	const { products } = useContext(GlobalContext);
+
+	//query che inserisce l'utente
 	const [searchQuery, setSearchQuery] = useState("");
-	//select delle categorie
+
+	//select della categoria
 	const [selectedCategory, setSelectedCategory] = useState(
 		"Seleziona una categoria"
 	);
-	//select dell'ordine
+
+	//select dell'ordine delle card
 	const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
 
+	//se non ci sono prodotti mostro un messaggio appropriato
 	if (products.length === 0) {
-		return <h2>Caricamento dati</h2>;
+		return (
+			<div className="spinner-container">
+				<h1>
+					Caricamento dati <FontAwesomeIcon icon={faRotateRight} spin />
+				</h1>
+			</div>
+		);
 	}
 
 	//filtraggio prodotti
@@ -98,7 +110,7 @@ export default function Homepage() {
 
 			{sortedProducts.length > 0 ? (
 				//mostro i prodotti filtrati
-				<div className="row row-cols-3 d-flex">
+				<div className="row row-cols-2 row-cols-lg-3 d-flex">
 					{sortedProducts.map((p) => (
 						<div key={p.id} className="col g-4 text-center">
 							<Card prop={p} />

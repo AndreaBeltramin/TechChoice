@@ -3,8 +3,13 @@ import ComparisonCard from "./components/ComparisonCard";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { GlobalContext } from "./context/GlobalContext";
+import { useEffect } from "react";
 
 export default function CompareProductsPage() {
+	useEffect(() => {
+		document.body.style.overflow = "auto";
+	}, []);
+
 	const location = useLocation();
 	const { product1, product2 } = location.state || {};
 	const { products } = useContext(GlobalContext);

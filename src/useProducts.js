@@ -19,6 +19,19 @@ export default function useProducts() {
 		}
 	}
 
+	//fetch per otttenere un singolo prodotto
+	const [product, setProduct] = useState("");
+
+	async function showProduct(id) {
+		try {
+			const response = await fetch(`${apiUrl}/products/${id}`);
+			const data = await response.json();
+			setProduct(data.product);
+		} catch (error) {
+			console.error("Errore nel recupero dei prodotti: ", error);
+		}
+	}
+
 	//stato per controllare i prodotti con il like
 	const [likedProducts, setLikedProducts] = useState([]);
 
@@ -26,7 +39,7 @@ export default function useProducts() {
 	function handleClick(productId) {
 		//trovo il prodotto partendo dall'id
 		const productClicked = products.find((p) => p.id === productId);
-		console.log(productClicked);
+		// console.log(productClicked);
 
 		//controllo se il prodotto cliccato è incluso nell'array di prodotti con il mi piace
 		const isLiked = likedProducts.includes(productClicked);
@@ -40,7 +53,7 @@ export default function useProducts() {
 			setLikedProducts(likedProducts.filter((p) => p.id !== productId));
 		}
 	}
-	console.log(likedProducts);
+	// console.log(likedProducts);
 	//funzione per controllare se un prodotto cliccato è nella lista dei prodotti col mi piace
 	function isProductLiked(id) {
 		const productLiked = products.find((p) => p.id === id);
@@ -50,6 +63,9 @@ export default function useProducts() {
 	return {
 		products,
 		setProducts,
+		product,
+		setProduct,
+		showProduct,
 		handleClick,
 		likedProducts,
 		isProductLiked,

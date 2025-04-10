@@ -1,35 +1,56 @@
+.spinner-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .logo {
 	width: 50px;
 	height: 50px;
 }
-
 .navbar {
 	background-color: rgb(110, 109, 109) !important;
 }
-
+th,
+td {
+	background-color: lightgray !important;
+	border: none;
+	padding: 0.2rem !important;
+}
+body {
+	background-color: lightgray;
+}
+.card {
+	background-color: lightgray;
+}
 .navbar a {
 	color: white;
 }
 a {
 	text-decoration: none;
 }
-
 li {
 	list-style: none;
 }
-
 .homepage-card:hover {
 	background-color: lightgray;
 }
-
 .card {
 	position: relative;
 }
-
 .heart {
 	position: absolute;
 	top: 0;
 	right: 0;
 	color: red;
 	cursor: pointer;
+}
+.canvas-row {
+	display: block;
 }
