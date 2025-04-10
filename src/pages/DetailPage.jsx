@@ -7,13 +7,13 @@ import Card from "../components/Card";
 export default function DetailPage() {
 	const { id } = useParams();
 	const { products, showProduct, product } = useContext(GlobalContext);
-	console.log(product);
+	// console.log(product);
 
 	const [selectedProduct, setSelectedProduct] = useState("");
-	console.log(selectedProduct);
+	// console.log(selectedProduct);
 	let selectedSmartphone;
 	selectedSmartphone = products.find((p) => p.title === selectedProduct);
-	console.log(selectedSmartphone);
+	// console.log(selectedSmartphone);
 
 	// const productDetail = products.find((p) => p.id === parseInt(id));
 	const productDetail = product;
@@ -24,6 +24,11 @@ export default function DetailPage() {
 
 	return (
 		<div className="container my-4">
+			<Link to="/">
+				<button className="btn btn-primary mb-4">
+					&#8592; Torna alla Home
+				</button>{" "}
+			</Link>
 			{/* sezione immagine e descrizione */}
 			<section>
 				<div className="row">

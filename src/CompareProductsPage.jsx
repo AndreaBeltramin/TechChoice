@@ -20,24 +20,22 @@ export default function CompareProductsPage() {
 	const [secondSelectedProduct, setSecondSelectedProduct] = useState(
 		"Seleziona un prodotto"
 	);
-	console.log(firstSelectedProduct);
-	console.log(secondSelectedProduct);
+	// console.log(firstSelectedProduct);
+	// console.log(secondSelectedProduct);
 	let firstSmartphone;
 	firstSmartphone = products.find((p) => p.title === firstSelectedProduct);
-	console.log(firstSmartphone);
+	// console.log(firstSmartphone);
 	let secondSmartphone;
 	secondSmartphone = products.find((p) => p.title === secondSelectedProduct);
-	console.log(secondSmartphone);
+	// console.log(secondSmartphone);
 
 	if (!product1 || !product2) {
 		return (
 			<div className="container mt-4 mb-4">
-				{product1 ? (
+				{product1 && !product2 ? (
 					<>
-						<h2>
-							Manca uno dei due prodotti da confrontare! Torna indietro e
-							seleziona un altro prodotto.
-						</h2>
+						<h2>Manca uno dei due prodotti da confrontare!</h2>
+						<h3>Torna indietro e seleziona un altro prodotto</h3>
 
 						<Link to={`/products/${product1.id}`}>
 							<button className="btn btn-primary">

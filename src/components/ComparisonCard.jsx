@@ -7,9 +7,10 @@ import { Link } from "react-router-dom";
 
 export default function ComparisonCard({ prop }) {
 	const { handleClick, isProductLiked } = useContext(GlobalContext);
+
 	return (
 		<div className="card h-100 ">
-			<div className="row">
+			<div className="row mb-2">
 				<div className="col-11">
 					<h5 className="card-title mt-2">
 						{prop.title}, {prop.brand}
@@ -17,13 +18,6 @@ export default function ComparisonCard({ prop }) {
 					<h6 className="card-subtitle text-body-secondary">
 						{prop.release_year}, <strong>{prop.price} euro</strong>
 					</h6>
-					<div className="mt-3">
-						<Link to={`/products/${prop.id}`}>
-							<button className="btn btn-primary mb-2">
-								Vai alla scheda completa
-							</button>
-						</Link>
-					</div>
 				</div>
 				<div className="col">
 					{
@@ -40,9 +34,11 @@ export default function ComparisonCard({ prop }) {
 				</div>
 			</div>
 
-			<div>
-				<img src={prop.image} alt={prop.title} className="img-fluid" />
-			</div>
+			<Link to={`/products/${prop.id}`}>
+				<div>
+					<img src={prop.image} alt={prop.title} className="img-fluid" />
+				</div>
+			</Link>
 
 			<div className="card-body text-start">
 				<ul>

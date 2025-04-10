@@ -61,13 +61,10 @@ export default function Homepage() {
 	return (
 		<div className="container mt-4 mb-5">
 			<h1>Scopri i migliori smartphone del momento</h1>
-			<h3>
-				Dai un'occhiata a come si confrontano le caratteristiche tra i vari
-				smartphone!
-			</h3>
-			<h3>Ti aiuteremo a scegliere il telefono perfetto per te.</h3>
+			<h3>Dai un'occhiata ai migliori smartphone del momento!</h3>
+			<h3>Ti aiuteremo a scegliere il telefono perfetto per te</h3>
 			<Link to="/compareProducts">
-				<h3>Vai alla sezione dedicata &#8594;</h3>
+				<span className="h3">Vai alla sezione dedicata &#8594;</span>
 			</Link>
 
 			<div className="d-flex mt-3">
