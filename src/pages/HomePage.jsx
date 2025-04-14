@@ -36,75 +36,104 @@ export default function Homepage() {
 		);
 	}
 
+	// funzione per cercare i prodotti
 	function searchProduct() {
+		// mi recupero il valore inserito dall'utente
 		const searchValue = queryRef.current.value.toLowerCase().trim();
 		if (searchValue === "") {
 			return;
 		} else {
-			// filtraggio prodotti
-			const filteredProducts = products.filter((p) => {
-				const isCategoryMatch =
-					selectedCategory === "Seleziona una categoria" ||
-					p.category === selectedCategory;
-				const isSearchMatch = p.title.toLowerCase().includes(searchValue);
+			const findedProducts = products.filter((p) =>
+				p.title.toLowerCase().includes(searchValue)
+			);
 
-				return isCategoryMatch && isSearchMatch;
-			});
-			if (filteredProducts.length === 0) {
+			// se l'array di prodotti cercati è vuoto
+			if (findedProducts.length === 0) {
+				// setto i prodotti con [] e setto lo stato per far comparire un messaggio adeguato a true
 				setSearchedProducts([]);
 				setNoResults(true);
 			} else {
-				setSearchedProducts(filteredProducts);
+				// setto i prodotti con l'array di prodotti trovati
+				setSearchedProducts(findedProducts);
+				// e setto lo stato per far comparire un messaggio adeguato a false
 				setNoResults(false);
 			}
-			queryRef.current.value = "";
+			// resetto il campo dell'input
+			// queryRef.current.value = "";
+		}
+	}
+	// console.log(searchedProducts);
+
+	// filtraggio prodotti per categoria
+	function filterProducts(event) {
+		const categorySelected = event.target.value;
+		// console.log(categorySelected);
+
+		const filteredProducts = searchedProducts.filter((p) => {
+			const isCategoryMatch =
+				categorySelected === "Seleziona una categoria" ||
+				p.category === categorySelected;
+			return isCategoryMatch;
+		});
+		// console.log(filteredProducts);
+
+		// se l'array di prodotti filtrati è vuoto
+		if (filteredProducts.length === 0) {
+			// setto a true lo stato per far comparire un messaggio adeguato
+			setNoResults(true);
+		} else {
+			// setto i prodotti trovati con l'array di prodotti filtrati
+			setSearchedProducts(filteredProducts);
+			// e setto a false lo stato per far comparire un messaggio adeguato
+			setNoResults(false);
 		}
 	}
 
-	console.log(searchedProducts);
-
+	// funzione per resettare la ricerca
 	function resetResearch() {
+		// setto la lista di prodotti iniziale
 		setSearchedProducts(products);
 		setNoResults(false);
 	}
 
+	// condizione per decidere cosa mostrare a schermo
+	// se non ci sono risultati mostro [], sennò mostro i prodotti trovati
 	const productsToDisplay = noResults ? [] : searchedProducts;
 
-	//prodotti filtrati e ordinati secondo le varie opzioni
-	// const sortedProducts = filteredProducts.sort((a, b) => {
-	// 	if (
-	// 		selectedOrder === "Ordine Alfabetico A-z" ||
-	// 		selectedOrder === "Ordina per..."
-	// 	) {
-	// 		return a.title.localeCompare(b.title);
-	// 	} else if (selectedOrder === "Ordine Alfabetico Z-a") {
-	// 		return b.title.localeCompare(a.title);
-	// 	} else if (selectedOrder === "Ordine di Prezzo Crescente") {
-	// 		return a.price - b.price;
-	// 	} else if (selectedOrder === "Ordine di Prezzo Decrescente") {
-	// 		return b.price - a.price;
-	// 	}
-	// });
+	// ordino i prodotti filtrati secondo le varie opzioni
+	const sortedProducts = productsToDisplay.sort((a, b) => {
+		if (
+			selectedOrder === "Ordine Alfabetico A-z" ||
+			selectedOrder === "Ordina per..."
+		) {
+			return a.title.localeCompare(b.title);
+		} else if (selectedOrder === "Ordine Alfabetico Z-a") {
+			return b.title.localeCompare(a.title);
+		} else if (selectedOrder === "Ordine per Categoria A-z") {
+			return a.category.localeCompare(b.category);
+		} else if (selectedOrder === "Ordine per Categoria Z-a") {
+			return b.category.localeCompare(a.category);
+		}
+	});
 
 	return (
 		<div className="container mt-4 mb-5">
-			<h1>Scopri i migliori prodotti tecnologici del momento!</h1>
-			<h3>Ti aiuteremo a scegliere quello perfetto per te</h3>
-
+			<div className="title">
+				<h1>Scopri i migliori prodotti tecnologici del momento!</h1>
+				<h3>Ti aiuteremo a scegliere quello perfetto per te</h3>
+			</div>
 			<div className="d-flex mt-3">
+				{/* input di ricerca */}
 				<input
 					className="me-2"
 					type="text"
 					placeholder="Cerca per nome..."
 					aria-label="Search"
 					ref={queryRef}
+					onClick={() => (queryRef.current.value = "")}
 				/>
-
-				<select
-					className="p-2"
-					value={selectedCategory}
-					onChange={(e) => setSelectedCategory(e.target.value)}
-				>
+				{/* select per filtrare per categoria */}
+				<select className="p-2" onChange={() => filterProducts(event)}>
 					<option defaultValue="Seleziona una categoria">
 						Seleziona una categoria
 					</option>
@@ -112,6 +141,7 @@ export default function Homepage() {
 					<option value="Tablet">Tablet</option>
 					<option value="Computer">Computer</option>
 				</select>
+				{/* select per ordinare i prodotti */}
 				<select
 					className="p-2 ms-2"
 					value={selectedOrder}
@@ -120,14 +150,16 @@ export default function Homepage() {
 					<option defaultValue="Ordina per...">Ordina per...</option>
 					<option value="Ordine Alfabetico A-z">Ordine Alfabetico A-z</option>
 					<option value="Ordine Alfabetico Z-a"> Ordine Alfabetico Z-a</option>
-					<option value="Ordine di Prezzo Crescente">
-						Ordine di Prezzo Crescente
+					<option value="Ordine per Categoria A-z">
+						Ordine per Categoria A-z
 					</option>
-					<option value="Ordine di Prezzo Decrescente">
-						Ordine di Prezzo Decrescente
+					<option value="Ordine per Categoria Z-a">
+						{" "}
+						Ordine per Categoria Z-a
 					</option>
 				</select>
 			</div>
+			{/* bottone per avviare la ricerca e resettare la lista  */}
 			<div className="mt-2">
 				<button className="btn btn-primary" onClick={searchProduct}>
 					Cerca
@@ -139,13 +171,15 @@ export default function Homepage() {
 
 			{/* mostro i prodotti filtrati*/}
 			{noResults ? (
+				// se non ci sono risultati della ricerca
 				<div className="container mt-4">
 					<h2>Nessun risultato trovato!</h2>
 					<h3>Prova a cercare un altro prodotto o cambia categoria</h3>
 				</div>
 			) : (
+				// se ci sono risultati dalla ricerca
 				<div className="row row-cols-2 row-cols-lg-3 d-flex">
-					{productsToDisplay.map((p) => (
+					{sortedProducts.map((p) => (
 						<div key={p.id} className="col g-4 text-center">
 							<Card prop={p} />
 						</div>

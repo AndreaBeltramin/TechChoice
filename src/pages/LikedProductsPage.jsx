@@ -9,10 +9,10 @@ export default function LikedProductsPage() {
 
 	return (
 		<div className="container mt-4">
-			<h2>
+			<h1>
 				La lista dei tuoi prodotti preferiti{" "}
 				{<FontAwesomeIcon icon={solidHeart} className="text-danger" />}
-			</h2>
+			</h1>
 			{likedProducts.length > 0 ? (
 				<div className="row row-cols-3">
 					{likedProducts.map((p) => (

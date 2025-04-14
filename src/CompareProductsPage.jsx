@@ -81,10 +81,10 @@ export default function CompareProductsPage() {
 	return (
 		<div className="container mt-4 mb-4">
 			<h1>Comparazione prodotti</h1>
-			<h2 className="mb-4">
+			<h3 className="mb-4">
 				Seleziona due prodotti per confrontarli o{" "}
 				{<Link to="/">torna alla pagina precedente</Link>}
-			</h2>
+			</h3>
 			<div className="row row-cols-2">
 				<div className="col">
 					<select className="p-2" onChange={handleFirstProduct}>
