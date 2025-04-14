@@ -34,6 +34,7 @@ body {
 }
 a {
 	text-decoration: none;
+	color: inherit;
 }
 li {
 	list-style: none;
@@ -41,8 +42,8 @@ li {
 .homepage-card:hover {
 	background-color: lightgray;
 }
-.card {
-	position: relative;
+.card:hover {
+	background-color: rgba(0, 0, 0, 0.3);
 }
 .heart {
 	color: red;
@@ -50,4 +51,7 @@ li {
 }
 .canvas-row {
 	display: block;
+}
+.offcanvas {
+	background-color: rgba(220, 220, 220, 0.9) !important;
 }

@@ -6,7 +6,7 @@ import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 
 export default function Card({ prop }) {
-	const { products, handleClick, isProductLiked } = useContext(GlobalContext);
+	const { handleClick, isProductLiked } = useContext(GlobalContext);
 
 	return (
 		<div className="card homepage-card h-100">
