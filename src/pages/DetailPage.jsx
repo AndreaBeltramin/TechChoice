@@ -13,6 +13,9 @@ export default function DetailPage() {
 	// stato per i dati del secondo prodotto
 	const [secondProductData, setSecondProductData] = useState(null);
 
+	// stato per i dati del terzo prodotto
+	const [thirdProductData, setThirdProductData] = useState(null);
+
 	// al montaggio del componente recupero i dati del prodotto
 	useEffect(() => {
 		showProduct(id);
@@ -49,6 +52,35 @@ export default function DetailPage() {
 			fetchSecondProduct(selectedProduct.id);
 		} else {
 			setSecondProductData(null);
+		}
+	};
+
+	// fetch per recuperare tutti i dati di un prodotto partendo dal suo ID
+	async function fetchThirdProduct(productId) {
+		try {
+			const response = await fetch(
+				`http://localhost:3001/products/${productId}`
+			);
+			const data = await response.json();
+			// console.log(data.product);
+			// setto i dati del secondo prodotto coi dati recuperati
+			setThirdProductData(data.product);
+		} catch (error) {
+			console.error(error);
+			setThirdProductData(null);
+		}
+	}
+
+	// funzione per recuperare la selezione dell'utente e ricercare il prodotto dal titolo
+	const handleThirdProduct = (event) => {
+		const selectedProduct = findProductByTitle(event.target.value);
+		// console.log(selectedProduct);
+
+		// se un prodotto è selezionato recupero tutti i suoi dati
+		if (selectedProduct) {
+			fetchThirdProduct(selectedProduct.id);
+		} else {
+			setThirdProductData(null);
 		}
 	};
 
@@ -147,7 +179,6 @@ export default function DetailPage() {
 								))}
 							</select>
 						</div>
-
 						{/* mostro il secondo prodotto  */}
 						{secondProductData && (
 							<div className="row canvas-row mt-4">
@@ -161,11 +192,46 @@ export default function DetailPage() {
 								</div>
 							</div>
 						)}
+
+						{/* selezione per il terzo prodotto */}
+						{secondProductData && (
+							<>
+								<div className="d-flex justify-content-center">
+									<select onChange={handleThirdProduct} className="p-2 mt-2">
+										<option defaultValue="Seleziona un dispositivo">
+											Seleziona {product.category.toLowerCase()}
+										</option>
+										{products.map((p) => (
+											<option key={p.id}>{p.title}</option>
+										))}
+									</select>
+								</div>
+								{thirdProductData && (
+									<div className="row canvas-row mt-4">
+										<div className="col text-center">
+											{thirdProductData.title}
+										</div>
+										<div className="col d-flex justify-content-center">
+											<img
+												src={thirdProductData.image}
+												alt={thirdProductData.title}
+												className="w-75"
+											/>
+										</div>
+									</div>
+								)}
+							</>
+						)}
+
 						{/* bottone per andare alla pagina di confronto  */}
 						<div className="d-flex justify-content-center">
 							<Link
 								to="/compareProducts"
-								state={{ product1: product, product2: secondProductData }}
+								state={{
+									product1: product,
+									product2: secondProductData,
+									product3: thirdProductData,
+								}}
 							>
 								<button className="btn btn-primary mt-2 " type="button">
 									Vai al confronto
