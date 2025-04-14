@@ -11,10 +11,10 @@ export default function LikedProductsPage() {
 		<div className="container mt-4">
 			<h2>
 				La lista dei tuoi prodotti preferiti{" "}
-				{<FontAwesomeIcon icon={solidHeart} />}
+				{<FontAwesomeIcon icon={solidHeart} className="text-danger" />}
 			</h2>
 			{likedProducts.length > 0 ? (
-				<div className="row row-cols-3 d-flex">
+				<div className="row row-cols-3">
 					{likedProducts.map((p) => (
 						<div key={p.id} className="col g-4 text-center">
 							<Card prop={p} />

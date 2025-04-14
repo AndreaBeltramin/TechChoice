@@ -10,36 +10,26 @@ export default function Card({ prop }) {
 
 	return (
 		<div className="card homepage-card h-100">
-			<div className="row">
-				<div className="col-11">
-					<h5 className="card-title mt-2">
-						{prop.title}, {prop.brand}
-					</h5>
-					<h6 className="card-subtitle text-body-secondary">
-						{prop.release_year}, <strong>{prop.price} euro</strong>
-					</h6>
+			<div className="row align-items-center">
+				<div className="col-6 text-start ">
+					<span className="badge text-bg-light mt-2 ms-2">{prop.category}</span>
 				</div>
-				<div className="col">
+				<div className="col-6 text-end">
 					{/* icona del cuore */}
-					{
-						<span
-							className="heart mt-2 me-2"
-							onClick={() => handleClick(prop.id)}
-						>
-							<FontAwesomeIcon
-								//se il prodotto ha il mi piace faccio vedere il cuore pieno sennò il cuore vuoto
-								icon={isProductLiked(prop.id) ? solidHeart : regularHeart}
-								className="fa-xl"
-							/>
-						</span>
-					}
+					<FontAwesomeIcon
+						//se il prodotto ha il mi piace faccio vedere il cuore pieno sennò il cuore vuoto
+						icon={isProductLiked(prop.id) ? solidHeart : regularHeart}
+						onClick={() => handleClick(prop.id)}
+						className="fa-xl heart mt-2 me-2"
+					/>
+				</div>
+				<div className="col-12">
+					{/* link per aprire la pagina di dettaglio del singolo prodotto */}
+					<Link className="card-body" to={`/products/${prop.id}`}>
+						<h5 className="card-title">{prop.title}</h5>
+					</Link>
 				</div>
 			</div>
-
-			{/* link per aprire la pagina di dettaglio del singolo prodotto */}
-			<Link className="card-body" to={`/products/${prop.id}`}>
-				<img src={prop.image} alt={prop.title} className="img-fluid" />
-			</Link>
 		</div>
 	);
 }

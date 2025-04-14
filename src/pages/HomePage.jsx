@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
@@ -8,17 +8,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Homepage() {
 	const { products } = useContext(GlobalContext);
+	const [searchedProducts, setSearchedProducts] = useState([]);
+	const [noResults, setNoResults] = useState(false);
 
 	//query che inserisce l'utente
-	const [searchQuery, setSearchQuery] = useState("");
+	const queryRef = useRef();
 
 	//select della categoria
 	const [selectedCategory, setSelectedCategory] = useState(
 		"Seleziona una categoria"
 	);
-
 	//select dell'ordine delle card
 	const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
+
+	useEffect(() => {
+		setSearchedProducts(products);
+	}, [products]);
 
 	//se non ci sono prodotti mostro un messaggio appropriato
 	if (products.length === 0) {
@@ -31,38 +36,60 @@ export default function Homepage() {
 		);
 	}
 
-	//filtraggio prodotti
-	const filteredProducts = products.filter((p) => {
-		const isCategoryMatch =
-			selectedCategory === "Seleziona una categoria" ||
-			p.category === selectedCategory;
-		const isSearchMatch =
-			searchQuery.trim() === "" ||
-			p.title.toLowerCase().includes(searchQuery.toLowerCase());
-		return isCategoryMatch && isSearchMatch;
-	});
+	function searchProduct() {
+		const searchValue = queryRef.current.value.toLowerCase().trim();
+		if (searchValue === "") {
+			return;
+		} else {
+			// filtraggio prodotti
+			const filteredProducts = products.filter((p) => {
+				const isCategoryMatch =
+					selectedCategory === "Seleziona una categoria" ||
+					p.category === selectedCategory;
+				const isSearchMatch = p.title.toLowerCase().includes(searchValue);
+
+				return isCategoryMatch && isSearchMatch;
+			});
+			if (filteredProducts.length === 0) {
+				setSearchedProducts([]);
+				setNoResults(true);
+			} else {
+				setSearchedProducts(filteredProducts);
+				setNoResults(false);
+			}
+			queryRef.current.value = "";
+		}
+	}
+
+	console.log(searchedProducts);
+
+	function resetResearch() {
+		setSearchedProducts(products);
+		setNoResults(false);
+	}
+
+	const productsToDisplay = noResults ? [] : searchedProducts;
 
 	//prodotti filtrati e ordinati secondo le varie opzioni
-	const sortedProducts = filteredProducts.sort((a, b) => {
-		if (
-			selectedOrder === "Ordine Alfabetico A-z" ||
-			selectedOrder === "Ordina per..."
-		) {
-			return a.title.localeCompare(b.title);
-		} else if (selectedOrder === "Ordine Alfabetico Z-a") {
-			return b.title.localeCompare(a.title);
-		} else if (selectedOrder === "Ordine di Prezzo Crescente") {
-			return a.price - b.price;
-		} else if (selectedOrder === "Ordine di Prezzo Decrescente") {
-			return b.price - a.price;
-		}
-	});
+	// const sortedProducts = filteredProducts.sort((a, b) => {
+	// 	if (
+	// 		selectedOrder === "Ordine Alfabetico A-z" ||
+	// 		selectedOrder === "Ordina per..."
+	// 	) {
+	// 		return a.title.localeCompare(b.title);
+	// 	} else if (selectedOrder === "Ordine Alfabetico Z-a") {
+	// 		return b.title.localeCompare(a.title);
+	// 	} else if (selectedOrder === "Ordine di Prezzo Crescente") {
+	// 		return a.price - b.price;
+	// 	} else if (selectedOrder === "Ordine di Prezzo Decrescente") {
+	// 		return b.price - a.price;
+	// 	}
+	// });
 
 	return (
 		<div className="container mt-4 mb-5">
-			<h1>Scopri i migliori smartphone del momento</h1>
-			<h3>Dai un'occhiata ai migliori smartphone del momento!</h3>
-			<h3>Ti aiuteremo a scegliere il telefono perfetto per te</h3>
+			<h1>Scopri i migliori smartphone del momento!</h1>
+			<h3>Ti aiuteremo a scegliere quello perfetto per te</h3>
 			<Link to="/compareProducts">
 				<span className="h3">Vai alla sezione dedicata &#8594;</span>
 			</Link>
@@ -73,9 +100,9 @@ export default function Homepage() {
 					type="text"
 					placeholder="Cerca per nome..."
 					aria-label="Search"
-					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
+					ref={queryRef}
 				/>
+
 				<select
 					className="p-2"
 					value={selectedCategory}
@@ -104,21 +131,28 @@ export default function Homepage() {
 					</option>
 				</select>
 			</div>
+			<div className="mt-2">
+				<button className="btn btn-primary" onClick={searchProduct}>
+					Cerca
+				</button>
+				<button className="btn btn-primary ms-2" onClick={resetResearch}>
+					Torna alla lista intera
+				</button>
+			</div>
 
-			{sortedProducts.length > 0 ? (
-				//mostro i prodotti filtrati
+			{/* mostro i prodotti filtrati*/}
+			{noResults ? (
+				<div className="container mt-4">
+					<h2>Nessun risultato trovato!</h2>
+					<h3>Prova a cercare un altro prodotto o cambia categoria</h3>
+				</div>
+			) : (
 				<div className="row row-cols-2 row-cols-lg-3 d-flex">
-					{sortedProducts.map((p) => (
+					{productsToDisplay.map((p) => (
 						<div key={p.id} className="col g-4 text-center">
 							<Card prop={p} />
 						</div>
 					))}
-				</div>
-			) : (
-				//altrimenti mostro un messaggio di errore
-				<div className="container mt-4">
-					<h2>Nessun risultato trovato!</h2>
-					<h3>Prova a cercare un altro prodotto o cambia categoria</h3>
 				</div>
 			)}
 		</div>
