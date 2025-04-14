@@ -53,7 +53,7 @@ export default function useProducts() {
 			setLikedProducts(likedProducts.filter((p) => p.id !== productId));
 		}
 	}
-	// console.log(likedProducts);
+
 	//funzione per controllare se un prodotto cliccato è nella lista dei prodotti col mi piace
 	function isProductLiked(id) {
 		const productLiked = products.find((p) => p.id === id);

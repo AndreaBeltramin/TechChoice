@@ -14,10 +14,6 @@ export default function Homepage() {
 	//query che inserisce l'utente
 	const queryRef = useRef();
 
-	//select della categoria
-	const [selectedCategory, setSelectedCategory] = useState(
-		"Seleziona una categoria"
-	);
 	//select dell'ordine delle card
 	const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
 

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Heart from "./Heart";
+import Description from "./Description";
 
 export default function ComparisonCard({ prop }) {
 	return (
@@ -23,49 +24,13 @@ export default function ComparisonCard({ prop }) {
 			</div>
 
 			<Link to={`/products/${prop.id}`}>
-				<div>
-					<img src={prop.image} alt={prop.title} className="img-fluid" />
-				</div>
-
-				<div className="card-body text-start">
-					<ul>
-						<li>
-							<strong>Display:</strong> {prop.display}
-						</li>
-						<li>
-							<strong>Cameras:</strong> {prop.cameras}
-						</li>
-						<li>
-							<strong>Storage:</strong> {prop.storage}
-						</li>
-						<li>
-							<strong>Chip:</strong> {prop.chip}
-						</li>
-						<li>
-							<strong>Sim:</strong> {prop.sim}
-						</li>
-						<li>
-							<strong>Bluetooth:</strong> {prop.bluetooth}
-						</li>
-						<li>
-							<strong>Port:</strong> {prop.port}
-						</li>
-						<li>
-							<strong>Network Connectivity:</strong> {prop.network_connectivity}
-						</li>
-						<li>
-							<strong>Batteria:</strong> {prop.battery}
-						</li>
-						<li>
-							<strong>Peso:</strong> {prop.weight}
-						</li>
-						<li>
-							<strong>Dimensioni:</strong> {prop.dimensions}
-						</li>
-						<li>
-							<strong>Sistema operativo:</strong> {prop.operating_system}
-						</li>
-					</ul>
+				<div className="card-body ">
+					<div>
+						<img src={prop.image} alt={prop.title} className="img-fluid" />
+					</div>
+					<div>
+						<Description prop={prop} />
+					</div>
 				</div>
 			</Link>
 		</div>

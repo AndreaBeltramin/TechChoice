@@ -3,11 +3,11 @@ import { GlobalContext } from "../context/GlobalContext";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Heart from "../components/Heart";
+import Description from "../components/Description";
 
 export default function DetailPage() {
 	const { id } = useParams();
-	const { products, showProduct, product, handleClick, isProductLiked } =
-		useContext(GlobalContext);
+	const { products, showProduct, product } = useContext(GlobalContext);
 	// console.log(product);
 
 	// stato per i dati del secondo prodotto
@@ -104,104 +104,8 @@ export default function DetailPage() {
 				</div>
 			</section>
 
-			{/* sezione caratteristiche tecniche */}
-			<section className="d-xl-flex justify-content-evenly">
-				{/* sezione caratteristiche generali */}
-				<div className="me-4">
-					<h3 className="mt-4 ">Caratteristiche generali</h3>
-					{/* {Object.keys(productDetail).map((key) => {
-						console.log(key, productDetail[key]);
-						if (key === "title" || key === "id" || key === "image") return;
-						return (
-							<div>
-								<span className="fs-5">{key} : </span className="fs-5">
-								<p>{productDetail[key]}</p>
-							</div>
-						);
-					})} */}
-
-					<table className="table table-striped ">
-						<tbody>
-							<tr>
-								<th scope="row">Nome: </th>
-								<td>{product.title}</td>
-							</tr>
-							<tr>
-								<th scope="row">Marca: </th>
-								<td>{product.brand}</td>
-							</tr>
-							<tr>
-								<th scope="row">Tipo di prodotto: </th>
-								<td>{product.category}</td>
-							</tr>
-							<tr>
-								<th scope="row">Anno di uscita: </th>
-								<td>{product.release_year}</td>
-							</tr>
-							<tr>
-								<th scope="row">Dimensioni: </th>
-								<td>{product.dimensions}</td>
-							</tr>
-							<tr>
-								<th scope="row">Peso: </th>
-								<td>{product.weight}</td>
-							</tr>
-							<tr>
-								<th scope="row">Sistema operativo: </th>
-								<td>{product.operating_system}</td>
-							</tr>
-							<tr>
-								<th scope="row">Materiali: </th>
-								<td>{product.materials}</td>
-							</tr>
-							<tr>
-								<th scope="row">Sim: </th>
-								<td>{product.sim}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				{/* sezione caratteristiche specifiche */}
-				<div>
-					<h3 className="mt-4 ">Caratteristiche specifiche</h3>
-					<table className="table table-striped">
-						<tbody>
-							<tr>
-								<th scope="row">Display: </th>
-								<td>{product.display}</td>
-							</tr>
-							<tr>
-								<th scope="row">Chip: </th>
-								<td>{product.chip}</td>
-							</tr>
-							<tr>
-								<th scope="row">Capacità di memoria: </th>
-								<td>{product.storage}</td>
-							</tr>
-							<tr>
-								<th scope="row">Batteria: </th>
-								<td>{product.battery}</td>
-							</tr>
-							<tr>
-								<th scope="row">Camera: </th>
-								<td>{product.cameras}</td>
-							</tr>
-							<tr>
-								<th scope="row">Porta di ricarica: </th>
-								<td>{product.port}</td>
-							</tr>
-							<tr>
-								<th scope="row">Bluetooth: </th>
-								<td>{product.bluetooth}</td>
-							</tr>
-							<tr>
-								<th scope="row">Connettività: </th>
-								<td>{product.network_connectivity}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+			<section>
+				<Description prop={product} />
 			</section>
 
 			{/* sezione selezione confronto  */}

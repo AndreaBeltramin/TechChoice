@@ -82,7 +82,7 @@ export default function CompareProductsPage() {
 		<div className="container mt-4 mb-5">
 			<h1>Comparazione prodotti</h1>
 			<h3>Seleziona due prodotti per confrontarli</h3>
-			<div className="row row-cols-2 justify-content-between">
+			<div className="row justify-content-between">
 				<div className="col">
 					{/* select primo prodotto */}
 					<select className="mt-2 me-2 input" onChange={handleFirstProduct}>
