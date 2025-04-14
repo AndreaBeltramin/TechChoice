@@ -122,10 +122,10 @@ export default function Homepage() {
 				<h1>Scopri i migliori prodotti tecnologici del momento!</h1>
 				<h3>Ti aiuteremo a scegliere quello perfetto per te</h3>
 			</div>
-			<div className="d-flex mt-3">
+			<div className="d-md-flex">
 				{/* input di ricerca */}
 				<input
-					className="me-2"
+					className="mt-2 me-2 input"
 					type="text"
 					placeholder="Cerca per nome..."
 					aria-label="Search"
@@ -133,7 +133,10 @@ export default function Homepage() {
 					onClick={() => (queryRef.current.value = "")}
 				/>
 				{/* select per filtrare per categoria */}
-				<select className="p-2" onChange={() => filterProducts(event)}>
+				<select
+					className="mt-2 me-2 input"
+					onChange={() => filterProducts(event)}
+				>
 					<option defaultValue="Seleziona una categoria">
 						Seleziona una categoria
 					</option>
@@ -143,7 +146,7 @@ export default function Homepage() {
 				</select>
 				{/* select per ordinare i prodotti */}
 				<select
-					className="p-2 ms-2"
+					className="mt-2 input"
 					value={selectedOrder}
 					onChange={(e) => setSelectedOrder(e.target.value)}
 				>

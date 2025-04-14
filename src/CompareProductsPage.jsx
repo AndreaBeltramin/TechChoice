@@ -79,15 +79,13 @@ export default function CompareProductsPage() {
 	};
 
 	return (
-		<div className="container mt-4 mb-4">
+		<div className="container mt-4 mb-5">
 			<h1>Comparazione prodotti</h1>
-			<h3 className="mb-4">
-				Seleziona due prodotti per confrontarli o{" "}
-				{<Link to="/">torna alla pagina precedente</Link>}
-			</h3>
-			<div className="row row-cols-2">
+			<h3>Seleziona due prodotti per confrontarli</h3>
+			<div className="row row-cols-2 justify-content-between">
 				<div className="col">
-					<select className="p-2" onChange={handleFirstProduct}>
+					{/* select primo prodotto */}
+					<select className="mt-2 me-2 input" onChange={handleFirstProduct}>
 						<option defaultValue="Seleziona un prodotto">
 							{product1 ? product1.title : "Seleziona un prodotto"}
 						</option>
@@ -95,9 +93,15 @@ export default function CompareProductsPage() {
 							<option key={p.id}>{p.title}</option>
 						))}
 					</select>
+					{/* primo prodotto */}
+					<div className="mt-4 text-center">
+						{firstProductData && <ComparisonCard prop={firstProductData} />}
+					</div>
 				</div>
-				<div className="col">
-					<select className="p-2" onChange={handleSecondProduct}>
+
+				<div className="col ">
+					{/* select secondo prodotto */}
+					<select className="mt-2 input" onChange={handleSecondProduct}>
 						<option defaultValue="Seleziona un prodotto">
 							{product2 ? product2.title : "Seleziona un prodotto"}
 						</option>
@@ -105,15 +109,8 @@ export default function CompareProductsPage() {
 							<option key={p.id}>{p.title}</option>
 						))}
 					</select>
-				</div>
-
-				<div className=" row mt-4 g-3 text-center">
-					<div className="col">
-						{firstProductData && <ComparisonCard prop={firstProductData} />}
-					</div>
-				</div>
-				<div className="row mt-4 g-3 text-center">
-					<div className="col">
+					{/* secondo prodotto */}
+					<div className="mt-4 text-center">
 						{secondProductData && <ComparisonCard prop={secondProductData} />}
 					</div>
 				</div>

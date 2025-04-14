@@ -2,9 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import Heart from "../components/Heart";
 
 export default function DetailPage() {
 	const { id } = useParams();
@@ -55,39 +53,47 @@ export default function DetailPage() {
 	};
 
 	return (
-		<div className="container my-4">
+		<div className="container-md my-4">
 			{/* link per tornare alla home */}
 			<Link to="/">
 				<button className="btn btn-primary mb-4">
 					&#8592; Torna alla Home
 				</button>{" "}
 			</Link>
+			{/* bottone di confronto */}
+			<button
+				className="btn btn-primary mb-4 ms-2"
+				data-bs-toggle="offcanvas"
+				href="#offcanvasConfronto"
+				role="button"
+				aria-controls="offcanvasConfronto"
+			>
+				Confronta
+			</button>
 
 			{/* sezione immagine e descrizione del prodotto */}
 			<section>
 				<div className="row">
-					<div className="col-4 text-center">
-						<div className="row">
-							<div className="col-10">
-								<h3>
-									{product.title} ({product.brand})
-								</h3>
-							</div>
-							<div className="col-2">
+					<div className="col-12 col-lg-5">
+						<div className="d-flex justify-content-center ">
+							<h2 className="me-1">
+								{product.title} ({product.brand})
+							</h2>
+							<div>
 								{/* icona del cuore */}
-								<FontAwesomeIcon
-									//se il prodotto ha il mi piace faccio vedere il cuore pieno sennò il cuore vuoto
-									icon={isProductLiked(product.id) ? solidHeart : regularHeart}
-									className="fa-xl mt-2 me-2 heart"
-									onClick={() => handleClick(product.id)}
-								/>
+								<Heart id={product.id} />
 							</div>
 						</div>
-						{/* mostro l'immagine del prodotto */}
+						<div className="text-center">
+							{/* mostro l'immagine del prodotto */}
+							<img src={product.image} alt={product.title} />
+						</div>
 
-						<img src={product.image} alt={product.title} />
+						<div className="text-center mt-2">
+							<h2>{product.price?.toFixed(2)}€</h2>
+						</div>
 					</div>
-					<div className="col-8">
+					<div className="col-12 col-lg-7">
 						{/* se c'è una descrizione la mostro */}
 						{product.description && (
 							<div>
@@ -99,9 +105,10 @@ export default function DetailPage() {
 			</section>
 
 			{/* sezione caratteristiche tecniche */}
-			<section>
-				<h3 className="mt-4">Caratteristiche tecniche: </h3>
-				<div className="my-2">
+			<section className="d-xl-flex justify-content-evenly">
+				{/* sezione caratteristiche generali */}
+				<div className="me-4">
+					<h3 className="mt-4 ">Caratteristiche generali</h3>
 					{/* {Object.keys(productDetail).map((key) => {
 						console.log(key, productDetail[key]);
 						if (key === "title" || key === "id" || key === "image") return;
@@ -112,48 +119,92 @@ export default function DetailPage() {
 							</div>
 						);
 					})} */}
-					<div className="my-1">
-						<span className="h5">Tipo di prodotto: </span>
-						<span>{product.category}</span>
-					</div>
-					<div className="my-1">
-						<span className="h5">Sistema operativo: </span>
-						<span>{product.operating_system}</span>
-					</div>
-					<div className="my-1">
-						<span className="h5">Capacità di memoria: </span>
-						<span>{product.storage}</span>
-					</div>
-					<div className="my-1">
-						<span className="h5">Anno di uscita: </span>
-						<span>{product.release_year}</span>
-					</div>
-					<div className="my-1">
-						<span className="h5">Display: </span>
-						<span>{product.display}</span>
-					</div>
-					<div className="my-1">
-						<span className="h5">Camera: </span>
-						<span>{product.cameras}</span>
-					</div>
-					<div className="my-1">
-						<span className="h5">Porta di ricarica: </span>
-						<span>{product.port}</span>
-					</div>
+
+					<table className="table table-striped ">
+						<tbody>
+							<tr>
+								<th scope="row">Nome: </th>
+								<td>{product.title}</td>
+							</tr>
+							<tr>
+								<th scope="row">Marca: </th>
+								<td>{product.brand}</td>
+							</tr>
+							<tr>
+								<th scope="row">Tipo di prodotto: </th>
+								<td>{product.category}</td>
+							</tr>
+							<tr>
+								<th scope="row">Anno di uscita: </th>
+								<td>{product.release_year}</td>
+							</tr>
+							<tr>
+								<th scope="row">Dimensioni: </th>
+								<td>{product.dimensions}</td>
+							</tr>
+							<tr>
+								<th scope="row">Peso: </th>
+								<td>{product.weight}</td>
+							</tr>
+							<tr>
+								<th scope="row">Sistema operativo: </th>
+								<td>{product.operating_system}</td>
+							</tr>
+							<tr>
+								<th scope="row">Materiali: </th>
+								<td>{product.materials}</td>
+							</tr>
+							<tr>
+								<th scope="row">Sim: </th>
+								<td>{product.sim}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				{/* sezione caratteristiche specifiche */}
+				<div>
+					<h3 className="mt-4 ">Caratteristiche specifiche</h3>
+					<table className="table table-striped">
+						<tbody>
+							<tr>
+								<th scope="row">Display: </th>
+								<td>{product.display}</td>
+							</tr>
+							<tr>
+								<th scope="row">Chip: </th>
+								<td>{product.chip}</td>
+							</tr>
+							<tr>
+								<th scope="row">Capacità di memoria: </th>
+								<td>{product.storage}</td>
+							</tr>
+							<tr>
+								<th scope="row">Batteria: </th>
+								<td>{product.battery}</td>
+							</tr>
+							<tr>
+								<th scope="row">Camera: </th>
+								<td>{product.cameras}</td>
+							</tr>
+							<tr>
+								<th scope="row">Porta di ricarica: </th>
+								<td>{product.port}</td>
+							</tr>
+							<tr>
+								<th scope="row">Bluetooth: </th>
+								<td>{product.bluetooth}</td>
+							</tr>
+							<tr>
+								<th scope="row">Connettività: </th>
+								<td>{product.network_connectivity}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 
-			{/* bottone di confronto */}
-			<button
-				className="btn btn-primary"
-				data-bs-toggle="offcanvas"
-				href="#offcanvasConfronto"
-				role="button"
-				aria-controls="offcanvasConfronto"
-			>
-				Confronta
-			</button>
-
+			{/* sezione selezione confronto  */}
 			{product && (
 				<div
 					className="offcanvas offcanvas-end"
@@ -184,8 +235,8 @@ export default function DetailPage() {
 						{/* selezione per il secondo prodotto */}
 						<div className="d-flex justify-content-center">
 							<select onChange={handleSecondProduct} className="p-2 mt-2">
-								<option defaultValue="Seleziona uno smartphone">
-									Seleziona uno smartphone
+								<option defaultValue="Seleziona un dispositivo">
+									Seleziona {product.category.toLowerCase()}
 								</option>
 								{products.map((p) => (
 									<option key={p.id}>{p.title}</option>

@@ -1,13 +1,7 @@
-import { useContext } from "react";
-import { GlobalContext } from "../context/GlobalContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { Link } from "react-router-dom";
+import Heart from "./Heart";
 
 export default function ComparisonCard({ prop }) {
-	const { handleClick, isProductLiked } = useContext(GlobalContext);
-
 	return (
 		<div className="card h-100">
 			<div className="row mb-2">
@@ -16,12 +10,7 @@ export default function ComparisonCard({ prop }) {
 				</div>
 				<div className="col-6 text-end">
 					{/* icona del cuore */}
-					<FontAwesomeIcon
-						//se il prodotto ha il mi piace faccio vedere il cuore pieno sennò il cuore vuoto
-						icon={isProductLiked(prop.id) ? solidHeart : regularHeart}
-						onClick={() => handleClick(prop.id)}
-						className="fa-xl heart mt-2 me-2"
-					/>
+					<Heart id={prop.id} />
 				</div>
 				<div className="col-12">
 					<h5 className="card-title mt-2">
