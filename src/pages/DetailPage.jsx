@@ -176,7 +176,10 @@ export default function DetailPage() {
 						{/* selezione per il terzo prodotto */}
 						{secondProductData && (
 							<>
-								<div className="d-flex justify-content-center">
+								<div className="mt-2">
+									Vuoi aggiungere un altro {product.category}?
+								</div>
+								<div className="d-flex justify-content-center ">
 									<select onChange={handleThirdProduct} className="p-2 mt-2">
 										<option defaultValue="Seleziona un dispositivo">
 											Seleziona {product.category.toLowerCase()}

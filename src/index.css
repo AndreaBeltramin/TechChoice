@@ -63,6 +63,9 @@ li {
 .descrizione-prodotto {
 	text-align: justify;
 }
+.modal {
+	background-color: rgba(0, 0, 0, 0.5);
+}
 
 @media screen and (min-width: 1024px) {
 	.general-spec {
