@@ -60,6 +60,26 @@ export default function useProducts() {
 		//controllo se è incluso nell'array dei prodotti col mi piace
 		return likedProducts.includes(productLiked);
 	}
+
+	// funzione per recuperare i dati dell'oggetto dal titolo
+	const findProductByTitle = (title) => {
+		return products.find((p) => p.title === title);
+	};
+
+	// fetch per recuperare tutti i dati di un prodotto partendo dal suo ID
+	async function fetchDetailProduct(productId) {
+		try {
+			const response = await fetch(
+				`http://localhost:3001/products/${productId}`
+			);
+			const data = await response.json();
+			// console.log(data.product);
+			return data.product;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
 	return {
 		products,
 		setProducts,
@@ -69,5 +89,7 @@ export default function useProducts() {
 		handleClick,
 		likedProducts,
 		isProductLiked,
+		findProductByTitle,
+		fetchDetailProduct,
 	};
 }

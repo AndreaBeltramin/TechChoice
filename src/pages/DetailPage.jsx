@@ -7,7 +7,13 @@ import Description from "../components/Description";
 
 export default function DetailPage() {
 	const { id } = useParams();
-	const { products, showProduct, product } = useContext(GlobalContext);
+	const {
+		products,
+		showProduct,
+		product,
+		findProductByTitle,
+		fetchDetailProduct,
+	} = useContext(GlobalContext);
 	// console.log(product);
 
 	// stato per i dati del secondo prodotto
@@ -21,65 +27,35 @@ export default function DetailPage() {
 		showProduct(id);
 	}, []);
 
-	// creo una funzione per recuperare i dati dell'oggetto dal titolo
-	const findProductByTitle = (title) => {
-		return products.find((p) => p.title === title);
-	};
-
-	// fetch per recuperare tutti i dati di un prodotto partendo dal suo ID
-	async function fetchSecondProduct(productId) {
+	// funzione per recuperare il secondo prodotto dalla selezione dell'utente e ricercare il prodotto dal titolo
+	const handleSecondProduct = async (event) => {
 		try {
-			const response = await fetch(
-				`http://localhost:3001/products/${productId}`
-			);
-			const data = await response.json();
-			// console.log(data.product);
-			// setto i dati del secondo prodotto coi dati recuperati
-			setSecondProductData(data.product);
+			const selectedProduct = findProductByTitle(event.target.value);
+			// console.log(selectedProduct);
+			// se non c'è un prodotto selezionato mi fermo
+			if (!selectedProduct) return;
+			//se c'è un prodotto recupero tutti i suoi dati
+			const secondProduct = await fetchDetailProduct(selectedProduct.id);
+			setSecondProductData(secondProduct);
 		} catch (error) {
 			console.error(error);
 			setSecondProductData(null);
 		}
-	}
-
-	// funzione per recuperare la selezione dell'utente e ricercare il prodotto dal titolo
-	const handleSecondProduct = (event) => {
-		const selectedProduct = findProductByTitle(event.target.value);
-		// console.log(selectedProduct);
-
-		// se un prodotto è selezionato recupero tutti i suoi dati
-		if (selectedProduct) {
-			fetchSecondProduct(selectedProduct.id);
-		} else {
-			setSecondProductData(null);
-		}
 	};
 
-	// fetch per recuperare tutti i dati di un prodotto partendo dal suo ID
-	async function fetchThirdProduct(productId) {
+	// funzione per recuperare il terzo prodottto dalla selezione dell'utente e ricercare il prodotto dal titolo
+	const handleThirdProduct = async (event) => {
 		try {
-			const response = await fetch(
-				`http://localhost:3001/products/${productId}`
-			);
-			const data = await response.json();
-			// console.log(data.product);
-			// setto i dati del secondo prodotto coi dati recuperati
-			setThirdProductData(data.product);
+			const selectedProduct = findProductByTitle(event.target.value);
+			// console.log(selectedProduct);
+			// se non c'è un prodotto selezionato fermo
+			if (!selectedProduct) return;
+			//se c'è un prodotto recupero tutti i suoi dati
+			const thirdProduct = await fetchDetailProduct(selectedProduct.id);
+			// console.log(thirdProduct);
+			setThirdProductData(thirdProduct);
 		} catch (error) {
 			console.error(error);
-			setThirdProductData(null);
-		}
-	}
-
-	// funzione per recuperare la selezione dell'utente e ricercare il prodotto dal titolo
-	const handleThirdProduct = (event) => {
-		const selectedProduct = findProductByTitle(event.target.value);
-		// console.log(selectedProduct);
-
-		// se un prodotto è selezionato recupero tutti i suoi dati
-		if (selectedProduct) {
-			fetchThirdProduct(selectedProduct.id);
-		} else {
 			setThirdProductData(null);
 		}
 	};
@@ -129,13 +105,17 @@ export default function DetailPage() {
 						{/* se c'è una descrizione la mostro */}
 						{product.description && (
 							<div>
-								<h3>Breve descrizione del prodotto: </h3> {product.description}
+								<h3>Breve descrizione del prodotto: </h3>
+								<div className="descrizione-prodotto">
+									{product.description}
+								</div>
 							</div>
 						)}
 					</div>
 				</div>
 			</section>
 
+			{/* sezione descrizione specifiche */}
 			<section>
 				<Description prop={product} />
 			</section>
@@ -150,8 +130,8 @@ export default function DetailPage() {
 				>
 					<div className="offcanvas-header">
 						<span className="offcanvas-title" id="offcanvasConfrontoLabel">
-							Seleziona un altro {product.category.toLowerCase()} per fare il
-							confronto
+							Seleziona almeno un altro {product.category.toLowerCase()} per
+							fare il confronto
 						</span>
 						<button
 							type="button"
