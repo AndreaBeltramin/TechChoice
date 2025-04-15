@@ -4,7 +4,7 @@ import Description from "./Description";
 
 export default function ComparisonCard({ prop }) {
 	return (
-		<div className="card h-100">
+		<div className="card ">
 			<div className="row mb-2">
 				<div className="col-6 text-start ">
 					<span className="badge text-bg-light mt-2 ms-2">{prop.category}</span>
@@ -24,8 +24,8 @@ export default function ComparisonCard({ prop }) {
 			</div>
 
 			<Link to={`/products/${prop.id}`}>
-				<div className="card-body ">
-					<div>
+				<div className="card-body">
+					<div className="image-product">
 						<img src={prop.image} alt={prop.title} className="img-fluid" />
 					</div>
 					<div>

@@ -2,7 +2,7 @@ export default function Description({ prop }) {
 	return (
 		<div>
 			{/* sezione caratteristiche generali  */}
-			<div className="me-4">
+			<div className="general-spec">
 				<h3 className="mt-4 ">Caratteristiche generali</h3>
 				<table className="table table-striped ">
 					<tbody>
@@ -47,7 +47,7 @@ export default function Description({ prop }) {
 			</div>
 
 			{/* sezione caratteristiche specifiche  */}
-			<div>
+			<div className="spec-spec">
 				<h3 className="mt-4 ">Caratteristiche specifiche</h3>
 				<table className="table table-striped">
 					<tbody>

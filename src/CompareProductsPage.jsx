@@ -111,7 +111,7 @@ export default function CompareProductsPage() {
 		<div className="container-md my-4">
 			<div>
 				<h1>Comparazione prodotti</h1>
-				<h3>Seleziona due prodotti per confrontarli</h3>
+				<h3>Seleziona fino a tre prodotti per confrontarli</h3>
 			</div>
 			<div className="row justify-content-between">
 				<div className="col-lg-4">

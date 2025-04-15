@@ -27,6 +27,7 @@ body {
 }
 .card {
 	background-color: lightgray;
+	height: max-content;
 }
 .navbar a {
 	color: white;
@@ -56,6 +57,27 @@ li {
 	max-width: 315px;
 }
 .input {
-	width: 190px;
+	width: fit-content;
 	height: 40px;
+}
+
+@media screen and (min-width: 1024px) {
+	.general-spec {
+		height: 523px;
+	}
+	.spec-spec {
+		height: 660px;
+	}
+}
+
+@media screen and (min-width: 1440px) {
+	.image-product {
+		height: 400px;
+	}
+	.general-spec {
+		height: 330px;
+	}
+	.spec-spec {
+		height: 500px;
+	}
 }
