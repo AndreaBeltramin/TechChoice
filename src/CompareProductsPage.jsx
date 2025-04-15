@@ -108,11 +108,13 @@ export default function CompareProductsPage() {
 	};
 
 	return (
-		<div className="container mt-4 mb-5">
-			<h1>Comparazione prodotti</h1>
-			<h3>Seleziona due prodotti per confrontarli</h3>
+		<div className="container-md my-4">
+			<div>
+				<h1>Comparazione prodotti</h1>
+				<h3>Seleziona due prodotti per confrontarli</h3>
+			</div>
 			<div className="row justify-content-between">
-				<div className="col">
+				<div className="col-lg-4">
 					{/* select primo prodotto */}
 					<select className="mt-2 me-2 input" onChange={handleFirstProduct}>
 						<option defaultValue="Seleziona un prodotto">
@@ -128,7 +130,7 @@ export default function CompareProductsPage() {
 					</div>
 				</div>
 
-				<div className="col ">
+				<div className="col-lg-4">
 					{/* select secondo prodotto */}
 					<select className="mt-2 input" onChange={handleSecondProduct}>
 						<option defaultValue="Seleziona un prodotto">
@@ -144,7 +146,7 @@ export default function CompareProductsPage() {
 					</div>
 				</div>
 
-				<div className="col ">
+				<div className="col-lg-4">
 					{/* select terzo prodotto */}
 					<select className="mt-2 input" onChange={handleThirdProduct}>
 						<option defaultValue="Seleziona un prodotto">

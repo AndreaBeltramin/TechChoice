@@ -1,6 +1,6 @@
 export default function Description({ prop }) {
 	return (
-		<div className="d-xxl-flex justify-content-evenly">
+		<div>
 			{/* sezione caratteristiche generali  */}
 			<div className="me-4">
 				<h3 className="mt-4 ">Caratteristiche generali</h3>
