@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { GlobalContext } from "./context/GlobalContext";
 import { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function CompareProductsPage() {
 	useEffect(() => {
@@ -79,13 +81,13 @@ export default function CompareProductsPage() {
 				<h3>Seleziona fino a tre prodotti per confrontarli</h3>
 			</div>
 			<div
-				className={`row mt-3 ${
-					isClicked == true ? "row-cols-3" : "row-cols-2"
+				className={`row mt-3 row-cols-1 ${
+					isClicked == true || product3 ? "row-cols-lg-3" : "row-cols-lg-2"
 				}`}
 			>
 				<div className="col">
 					{/* select primo prodotto */}
-					<select className="me-2 input" onChange={handleFirstProduct}>
+					<select className="me-2 mt-2 input" onChange={handleFirstProduct}>
 						<option defaultValue="Seleziona un prodotto">
 							{product1 ? product1.title : "Seleziona un prodotto"}
 						</option>
@@ -99,53 +101,105 @@ export default function CompareProductsPage() {
 					</div>
 				</div>
 
-				<div className="col">
-					{/* select secondo prodotto */}
-					<div className="d-flex justify-content-between">
-						<select className=" input" onChange={handleSecondProduct}>
-							<option defaultValue="Seleziona un prodotto">
-								{product2 ? product2.title : "Seleziona un prodotto"}
-							</option>
-							{products.map((p) => (
-								<option key={p.id}>{p.title}</option>
-							))}
-						</select>
-						{secondProductData && (
-							<button
-								className={`btn btn-outline-secondary input ${
-									isClicked ? "d-none" : ""
-								}`}
-								onClick={() => {
-									setIsClicked(true);
-									setShow(true);
-								}}
-							>
-								Vuoi selezionare un altro dispositivo?
-							</button>
-						)}
-					</div>
-					{/* secondo prodotto */}
-					<div className="mt-4 text-center">
-						{secondProductData && <ComparisonCard prop={secondProductData} />}
-					</div>
-				</div>
-
-				{show && (
-					<div className="col">
-						{/* select terzo prodotto  */}
-						<select className="input" onChange={handleThirdProduct}>
-							<option defaultValue="Seleziona un prodotto">
-								{product3 ? product3.title : "Seleziona un prodotto"}
-							</option>
-							{products.map((p) => (
-								<option key={p.id}>{p.title}</option>
-							))}
-						</select>
-						{/* terzo prodotto */}
-						<div className="mt-4 text-center">
-							{thirdProductData && <ComparisonCard prop={thirdProductData} />}
+				{!product3 ? (
+					<>
+						<div className="col">
+							{/* select secondo prodotto */}
+							<div className="d-flex justify-content-between">
+								<select
+									className="input mt-2"
+									onChange={handleSecondProduct}
+									disabled={!firstProductData}
+								>
+									<option defaultValue="Seleziona un prodotto">
+										{product2 ? product2.title : "Seleziona un prodotto"}
+									</option>
+									{products.map((p) => (
+										<option key={p.id}>{p.title}</option>
+									))}
+								</select>
+								{secondProductData && (
+									<button
+										className={`btn btn-outline-secondary input mt-2 ${
+											isClicked ? "d-none" : ""
+										}`}
+										onClick={() => {
+											setIsClicked(true);
+											setShow(true);
+										}}
+									>
+										{window.innerWidth < 1440 ? (
+											<FontAwesomeIcon icon={faPlus} />
+										) : (
+											"Vuoi selezionare un altro dispositivo?"
+										)}
+									</button>
+								)}
+							</div>
+							{/* secondo prodotto */}
+							<div className="mt-4 text-center">
+								{secondProductData && (
+									<ComparisonCard prop={secondProductData} />
+								)}
+							</div>
 						</div>
-					</div>
+						{show && (
+							<div className="col">
+								{/* select terzo prodotto  */}
+								<select className="input mt-2" onChange={handleThirdProduct}>
+									<option defaultValue="Seleziona un prodotto">
+										{product3 ? product3.title : "Seleziona un prodotto"}
+									</option>
+									{products.map((p) => (
+										<option key={p.id}>{p.title}</option>
+									))}
+								</select>
+								{/* terzo prodotto */}
+								<div className="mt-4 text-center">
+									{thirdProductData && (
+										<ComparisonCard prop={thirdProductData} />
+									)}
+								</div>
+							</div>
+						)}
+					</>
+				) : (
+					<>
+						<div className="col">
+							{/* select secondo prodotto */}
+							<div>
+								<select className="input mt-2" onChange={handleSecondProduct}>
+									<option defaultValue="Seleziona un prodotto">
+										{product2 ? product2.title : "Seleziona un prodotto"}
+									</option>
+									{products.map((p) => (
+										<option key={p.id}>{p.title}</option>
+									))}
+								</select>
+							</div>
+							{/* secondo prodotto */}
+							<div className="mt-4 text-center">
+								{secondProductData && (
+									<ComparisonCard prop={secondProductData} />
+								)}
+							</div>
+						</div>
+						<div className="col">
+							{/* select terzo prodotto  */}
+							<select className="input mt-2" onChange={handleThirdProduct}>
+								<option defaultValue="Seleziona un prodotto">
+									{product3 ? product3.title : "Seleziona un prodotto"}
+								</option>
+								{products.map((p) => (
+									<option key={p.id}>{p.title}</option>
+								))}
+							</select>
+							{/* terzo prodotto */}
+							<div className="mt-4 text-center">
+								{thirdProductData && <ComparisonCard prop={thirdProductData} />}
+							</div>
+						</div>
+					</>
 				)}
 			</div>
 		</div>

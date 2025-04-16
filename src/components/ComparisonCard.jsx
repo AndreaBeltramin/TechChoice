@@ -13,7 +13,7 @@ export default function ComparisonCard({ prop }) {
 					{/* icona del cuore */}
 					<Heart id={prop.id} />
 				</div>
-				<div className="col-12">
+				<div className="col-12 titolo-card">
 					<h5 className="card-title mt-2">
 						{prop.title}, {prop.brand}
 					</h5>

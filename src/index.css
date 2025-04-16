@@ -59,6 +59,8 @@ li {
 .input {
 	width: fit-content;
 	height: 40px;
+	width: 200px;
+	padding: 0px !important;
 }
 .descrizione-prodotto {
 	text-align: justify;
@@ -66,24 +68,33 @@ li {
 .modal {
 	background-color: rgba(0, 0, 0, 0.5);
 }
-
+.titolo-card {
+	height: 80px;
+}
 @media screen and (min-width: 1024px) {
+	.image-product {
+		height: 330px;
+	}
 	.general-spec {
-		height: 523px;
+		min-height: 523px;
+		max-height: max-content;
 	}
 	.spec-spec {
-		height: 660px;
+		min-height: 750px;
+		max-height: max-content;
 	}
 }
 
 @media screen and (min-width: 1440px) {
 	.image-product {
-		height: 400px;
+		height: 410px;
 	}
 	.general-spec {
-		height: 330px;
+		min-height: 400px;
+		max-height: max-content;
 	}
 	.spec-spec {
-		height: 500px;
+		min-height: 500px;
+		max-height: max-content;
 	}
 }

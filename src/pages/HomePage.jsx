@@ -113,7 +113,7 @@ export default function Homepage() {
 	});
 
 	return (
-		<div className="container mt-4 mb-5">
+		<div className="container-md mt-4 mb-5">
 			<div className="title">
 				<h1>Scopri i migliori prodotti tecnologici del momento!</h1>
 				<h3>Ti aiuteremo a scegliere quello perfetto per te</h3>
@@ -134,7 +134,7 @@ export default function Homepage() {
 					onChange={() => filterProducts(event)}
 				>
 					<option defaultValue="Seleziona una categoria">
-						Seleziona una categoria
+						Seleziona categoria
 					</option>
 					<option value="Smartphone">Smartphone</option>
 					<option value="Tablet">Tablet</option>
