@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import ComparisonCard from "./components/ComparisonCard";
-import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { GlobalContext } from "./context/GlobalContext";
 import { useEffect } from "react";
@@ -120,7 +119,7 @@ export default function CompareProductsPage() {
 								</select>
 								{secondProductData && (
 									<button
-										className={`btn btn-outline-secondary input mt-2 ${
+										className={`btn btn-outline-secondary input-compare-products mt-2 ${
 											isClicked ? "d-none" : ""
 										}`}
 										onClick={() => {

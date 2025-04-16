@@ -130,8 +130,7 @@ export default function DetailPage() {
 				>
 					<div className="offcanvas-header">
 						<span className="offcanvas-title" id="offcanvasConfrontoLabel">
-							Seleziona almeno un altro {product.category.toLowerCase()} per
-							fare il confronto
+							Seleziona almeno un altro dispositivo per fare il confronto
 						</span>
 						<button
 							type="button"
@@ -177,7 +176,7 @@ export default function DetailPage() {
 						{secondProductData && (
 							<>
 								<div className="mt-2">
-									Vuoi aggiungere un altro {product.category}?
+									Vuoi aggiungere un altro dispositivo?
 								</div>
 								<div className="d-flex justify-content-center ">
 									<select onChange={handleThirdProduct} className="p-2 mt-2">

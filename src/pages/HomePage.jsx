@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +11,14 @@ export default function Homepage() {
 	const [noResults, setNoResults] = useState(false);
 
 	//query che inserisce l'utente
-	const queryRef = useRef();
+	const [query, setQuery] = useState("");
+	// const queryRef = useRef();
+
+	//select dell'ordine delle card
+	const [selectedCategory, setSelectedCategory] = useState(
+		"Seleziona categoria"
+	);
+	// console.log(selectedCategory);
 
 	//select dell'ordine delle card
 	const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
@@ -32,15 +38,37 @@ export default function Homepage() {
 		);
 	}
 
+	//funzione per prendere tutte le categorie dai prodotti
+	const allCategories = products.map((p) => p.category);
+	let categories = [];
+	allCategories.forEach((category) => {
+		if (!categories.includes(category)) {
+			categories.push(category);
+		}
+	});
+	// console.log(categories);
+
 	// funzione per cercare i prodotti
-	function searchProduct() {
+	async function searchProduct(e) {
 		// mi recupero il valore inserito dall'utente
-		const searchValue = queryRef.current.value.toLowerCase().trim();
-		if (searchValue === "") {
+		// const searchValue = queryRef.current.value.toLowerCase().trim();
+		setQuery(e.target.value);
+		console.log(selectedCategory);
+
+		if (query?.trim() === "") {
 			return;
+		} else if (selectedCategory) {
+			const apiUrl = "http://localhost:3001";
+			const response = await fetch(
+				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${selectedCategory}`
+			);
+			const data = await response.json();
+			console.log(data);
+			setSearchedProducts(data);
+			setNoResults(false);
 		} else {
 			const findedProducts = products.filter((p) =>
-				p.title.toLowerCase().includes(searchValue)
+				p.title.toLowerCase().includes(query?.toLowerCase())
 			);
 
 			// se l'array di prodotti cercati è vuoto
@@ -61,27 +89,67 @@ export default function Homepage() {
 	// console.log(searchedProducts);
 
 	// filtraggio prodotti per categoria
-	function filterProducts(event) {
-		const categorySelected = event.target.value;
-		// console.log(categorySelected);
+	async function filterProducts(e) {
+		setSelectedCategory(e.target.value);
+		console.log("query", query);
+		console.log(e.target.value.toLowerCase());
 
-		const filteredProducts = searchedProducts.filter((p) => {
-			const isCategoryMatch =
-				categorySelected === "Seleziona una categoria" ||
-				p.category === categorySelected;
-			return isCategoryMatch;
-		});
-		// console.log(filteredProducts);
-
-		// se l'array di prodotti filtrati è vuoto
-		if (filteredProducts.length === 0) {
-			// setto a true lo stato per far comparire un messaggio adeguato
-			setNoResults(true);
-		} else {
-			// setto i prodotti trovati con l'array di prodotti filtrati
-			setSearchedProducts(filteredProducts);
-			// e setto a false lo stato per far comparire un messaggio adeguato
+		if (!query) {
+			const apiUrl = "http://localhost:3001";
+			const response = await fetch(
+				`${apiUrl}/products?category=${e.target.value?.toLowerCase()}`
+			);
+			const data = await response.json();
+			console.log(data);
+			setSearchedProducts(data);
 			setNoResults(false);
+		}
+
+		if (query && e.target.value == "Seleziona categoria") {
+			const apiUrl = "http://localhost:3001";
+			const response = await fetch(
+				`${apiUrl}/products?search=${query.toLowerCase()}`
+			);
+			const data = await response.json();
+			// console.log(data);
+			setSearchedProducts(data);
+			setNoResults(false);
+		}
+
+		if (query?.trim() && e.target.value != "Seleziona categoria") {
+			const apiUrl = "http://localhost:3001";
+			const response = await fetch(
+				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${
+					e.target.value
+				}`
+			);
+			const data = await response.json();
+			// console.log(data);
+
+			if (data.length === 0) {
+				setSearchedProducts([]);
+				setNoResults(true);
+			} else {
+				setSearchedProducts(data);
+				setNoResults(false);
+			}
+		}
+
+		if (query?.trim() && !e.target.value) {
+			const apiUrl = "http://localhost:3001";
+			const response = await fetch(
+				`${apiUrl}/products?search=${query?.toLowerCase()}`
+			);
+			const data = await response.json();
+			// console.log(data);
+
+			if (data.length === 0) {
+				setSearchedProducts([]);
+				setNoResults(true);
+			} else {
+				setSearchedProducts(data);
+				setNoResults(false);
+			}
 		}
 	}
 
@@ -90,6 +158,8 @@ export default function Homepage() {
 		// setto la lista di prodotti iniziale
 		setSearchedProducts(products);
 		setNoResults(false);
+		setQuery("");
+		setSelectedCategory("");
 	}
 
 	// condizione per decidere cosa mostrare a schermo
@@ -125,20 +195,25 @@ export default function Homepage() {
 					type="text"
 					placeholder="Cerca per nome..."
 					aria-label="Search"
-					ref={queryRef}
-					onClick={() => (queryRef.current.value = "")}
+					value={query}
+					// ref={queryRef}
+					onChange={() => searchProduct(event)}
 				/>
 				{/* select per filtrare per categoria */}
 				<select
 					className="mt-2 me-2 input"
 					onChange={() => filterProducts(event)}
+					value={selectedCategory}
 				>
-					<option defaultValue="Seleziona una categoria">
+					<option defaultValue="Seleziona categoria">
 						Seleziona categoria
 					</option>
-					<option value="Smartphone">Smartphone</option>
-					<option value="Tablet">Tablet</option>
-					<option value="Computer">Computer</option>
+					{categories.map((category) => (
+						<option key={category} value={category}>
+							{" "}
+							{category}{" "}
+						</option>
+					))}
 				</select>
 				{/* select per ordinare i prodotti */}
 				<select
