@@ -12,24 +12,23 @@ export default function Homepage() {
 	const [searchedProducts, setSearchedProducts] = useState([]);
 	const [noResults, setNoResults] = useState(false);
 
-	//query che inserisce l'utente
+	// query che inserisce l'utente
 	const [query, setQuery] = useState("");
-	// const queryRef = useRef();
 
-	//select dell'ordine delle card
+	// select della categoria del prodotto
 	const [selectedCategory, setSelectedCategory] = useState(
 		"Seleziona categoria"
 	);
 	// console.log(selectedCategory);
 
-	//select dell'ordine delle card
+	// select dell'ordine delle card
 	const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
 
 	useEffect(() => {
 		setSearchedProducts(products);
 	}, [products]);
 
-	//se non ci sono prodotti mostro un messaggio appropriato
+	// se non ci sono prodotti mostro un messaggio appropriato
 	if (products.length === 0) {
 		return (
 			<div className="spinner-container">
@@ -40,7 +39,7 @@ export default function Homepage() {
 		);
 	}
 
-	//funzione per prendere tutte le categorie dai prodotti
+	// funzione per prendere tutte le categorie dai prodotti
 	const allCategories = products.map((p) => p.category);
 	let categories = [];
 	allCategories.forEach((category) => {
@@ -53,67 +52,41 @@ export default function Homepage() {
 	// funzione per cercare i prodotti
 	async function searchProduct(e) {
 		// mi recupero il valore inserito dall'utente
-		// const searchValue = queryRef.current.value.toLowerCase().trim();
 		setQuery(e.target.value);
-		// console.log(selectedCategory);
+		const currentQuery = e.target.value.toLowerCase();
+		// console.log(currentQuery);
 
-		// if (query?.trim() === "") {
-		// 	return;
-		// }
-
-		if (selectedCategory === "Seleziona categoria" && query) {
+		// se c'è la query dell'utente ma la categoria non è selezionata
+		if (currentQuery && selectedCategory === "Seleziona categoria") {
+			const response = await fetch(`${apiUrl}/products?search=${currentQuery}`);
+			const data = await response.json();
+			// console.log(data);
+			setSearchedProducts(data);
+			setNoResults(data.length === 0);
+		} else if (
+			// se c'è la query dell'utente ma è selezionata anche una categoria
+			currentQuery &&
+			selectedCategory !== "Seleziona categoria"
+		) {
 			const response = await fetch(
-				`${apiUrl}/products?search=${query?.toLowerCase()}`
+				`${apiUrl}/products?search=${currentQuery}&category=${selectedCategory}`
 			);
 			const data = await response.json();
 			// console.log(data);
 			setSearchedProducts(data);
-			setNoResults(false);
-		}
-
-		if (selectedCategory !== "Seleziona categoria") {
+			setNoResults(data.length === 0);
+		} else if (!currentQuery && selectedCategory !== "Seleziona categoria") {
+			// se non c'è una query e non c'è una categoria selezionata
 			const response = await fetch(
-				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${selectedCategory}`
+				`${apiUrl}/products?category=${selectedCategory}`
 			);
 			const data = await response.json();
-			// console.log(data);
-			if (data.length === 0) {
-				setSearchedProducts([]);
-				setNoResults(true);
-			} else {
-				setSearchedProducts(data);
-				setNoResults(false);
-			}
-			// } else {
-			// 		const response = await fetch(
-			// 			`${apiUrl}/products?search=${query?.toLowerCase()}`
-			// 		);
-			// 		const data = await response.json();
-			// 		console.log(data);
-			// 		if (data.length === 0) {
-			// 			setSearchedProducts([]);
-			// 			setNoResults(true);
-			// 		} else {
-			// 			setSearchedProducts(data);
-			// 			setNoResults(false);
-			// 		}
-			// 	}
-			// const findedProducts = products.filter((p) =>
-			// 	p.title.toLowerCase().includes(query?.toLowerCase())
-			// );
-			// // se l'array di prodotti cercati è vuoto
-			// if (findedProducts.length === 0) {
-			// 	// setto i prodotti con [] e setto lo stato per far comparire un messaggio adeguato a true
-			// 	setSearchedProducts([]);
-			// 	setNoResults(true);
-			// } else {
-			// 	// setto i prodotti con l'array di prodotti trovati
-			// 	setSearchedProducts(findedProducts);
-			// 	// e setto lo stato per far comparire un messaggio adeguato a false
-			// 	setNoResults(false);
-			// }
-			// // resetto il campo dell'input
-			// // queryRef.current.value = "";
+			setSearchedProducts(data);
+			setNoResults(data.length === 0);
+		} else {
+			// se la query è vuota e la categoria non è selezionata quindi è 'Seleziona categoria'
+			setSearchedProducts(products);
+			setNoResults(false);
 		}
 	}
 	// console.log(searchedProducts);
@@ -121,67 +94,45 @@ export default function Homepage() {
 	// filtraggio prodotti per categoria
 	async function filterProducts(e) {
 		setSelectedCategory(e.target.value);
-
-		if (!query) {
-			const response = await fetch(
-				`${apiUrl}/products?category=${e.target.value?.toLowerCase()}`
-			);
-			const data = await response.json();
-			// console.log(data);
-			setSearchedProducts(data);
-			setNoResults(false);
-		}
-
-		if (!query && e.target.value === "Seleziona categoria") {
-			const response = await fetch(`${apiUrl}/products`);
-			const data = await response.json();
-			// console.log(data);
-			setSearchedProducts(data);
-			setNoResults(false);
-		}
-
-		if (query && e.target.value === "Seleziona categoria") {
+		const currentCategory = e.target.value;
+		// non c'è una query dell'utente
+		if (currentCategory === "Seleziona categoria" && !query) {
 			const response = await fetch(
 				`${apiUrl}/products?search=${query?.toLowerCase()}`
 			);
 			const data = await response.json();
 			// console.log(data);
 			setSearchedProducts(data);
-			setNoResults(false);
-		}
-
-		if (query?.trim() && e.target.value != "Seleziona categoria") {
+			setNoResults(data.length === 0);
+		} else if (!query) {
 			const response = await fetch(
-				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${
-					e.target.value
-				}`
+				`${apiUrl}/products?category=${currentCategory}`
 			);
 			const data = await response.json();
 			// console.log(data);
-
-			if (data.length === 0) {
-				setSearchedProducts([]);
-				setNoResults(true);
-			} else {
-				setSearchedProducts(data);
-				setNoResults(false);
-			}
-		}
-
-		if (query?.trim() && !e.target.value) {
+			setSearchedProducts(data);
+			setNoResults(data.length === 0);
+		} else if (
+			// se la categoria è uguale a seleziona categoria
+			currentCategory === "Seleziona categoria"
+		) {
+			const response = await fetch(`${apiUrl}/products?search=${query}`);
+			const data = await response.json();
+			// console.log(data);
+			setSearchedProducts(data);
+			setNoResults(data.length === 0);
+		} else if (
+			// se c'è la query e c'è una categoria selezionata
+			query?.trim() &&
+			currentCategory !== "Seleziona categoria"
+		) {
 			const response = await fetch(
-				`${apiUrl}/products?search=${query?.toLowerCase()}`
+				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${currentCategory}`
 			);
 			const data = await response.json();
 			// console.log(data);
-
-			if (data.length === 0) {
-				setSearchedProducts([]);
-				setNoResults(true);
-			} else {
-				setSearchedProducts(data);
-				setNoResults(false);
-			}
+			setSearchedProducts(data);
+			setNoResults(data.length === 0);
 		}
 	}
 
@@ -191,7 +142,8 @@ export default function Homepage() {
 		setSearchedProducts(products);
 		setNoResults(false);
 		setQuery("");
-		setSelectedCategory("");
+		// resetto anche la select della categoria
+		setSelectedCategory("Seleziona categoria");
 	}
 
 	// condizione per decidere cosa mostrare a schermo
@@ -199,7 +151,7 @@ export default function Homepage() {
 	const productsToDisplay = noResults ? [] : searchedProducts;
 
 	// ordino i prodotti filtrati secondo le varie opzioni
-	const sortedProducts = productsToDisplay.sort((a, b) => {
+	const sortedProducts = [...productsToDisplay].sort((a, b) => {
 		if (
 			selectedOrder === "Ordine Alfabetico A-z" ||
 			selectedOrder === "Ordina per..."
@@ -212,6 +164,7 @@ export default function Homepage() {
 		} else if (selectedOrder === "Ordine per Categoria Z-a") {
 			return b.category.localeCompare(a.category);
 		}
+		return 0; // se l'ordine non corrisponde a nessuna opzione
 	});
 
 	return (
@@ -228,14 +181,13 @@ export default function Homepage() {
 					placeholder="Cerca per nome..."
 					aria-label="Search"
 					value={query}
-					// ref={queryRef}
-					onChange={() => searchProduct(event)}
+					onChange={searchProduct}
 				/>
 				{/* select per filtrare per categoria */}
 				<select
 					className="mt-2 me-2 input"
-					onChange={() => filterProducts(event)}
 					value={selectedCategory}
+					onChange={filterProducts}
 				>
 					<option defaultValue="Seleziona categoria">
 						Seleziona categoria
