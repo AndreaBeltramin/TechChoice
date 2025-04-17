@@ -5,6 +5,8 @@ import Card from "../components/Card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+const apiUrl = "http://localhost:3001";
+
 export default function Homepage() {
 	const { products } = useContext(GlobalContext);
 	const [searchedProducts, setSearchedProducts] = useState([]);
@@ -53,37 +55,65 @@ export default function Homepage() {
 		// mi recupero il valore inserito dall'utente
 		// const searchValue = queryRef.current.value.toLowerCase().trim();
 		setQuery(e.target.value);
-		console.log(selectedCategory);
+		// console.log(selectedCategory);
 
-		if (query?.trim() === "") {
-			return;
-		} else if (selectedCategory) {
-			const apiUrl = "http://localhost:3001";
+		// if (query?.trim() === "") {
+		// 	return;
+		// }
+
+		if (selectedCategory === "Seleziona categoria" && query) {
+			const response = await fetch(
+				`${apiUrl}/products?search=${query?.toLowerCase()}`
+			);
+			const data = await response.json();
+			// console.log(data);
+			setSearchedProducts(data);
+			setNoResults(false);
+		}
+
+		if (selectedCategory !== "Seleziona categoria") {
 			const response = await fetch(
 				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${selectedCategory}`
 			);
 			const data = await response.json();
-			console.log(data);
-			setSearchedProducts(data);
-			setNoResults(false);
-		} else {
-			const findedProducts = products.filter((p) =>
-				p.title.toLowerCase().includes(query?.toLowerCase())
-			);
-
-			// se l'array di prodotti cercati è vuoto
-			if (findedProducts.length === 0) {
-				// setto i prodotti con [] e setto lo stato per far comparire un messaggio adeguato a true
+			// console.log(data);
+			if (data.length === 0) {
 				setSearchedProducts([]);
 				setNoResults(true);
 			} else {
-				// setto i prodotti con l'array di prodotti trovati
-				setSearchedProducts(findedProducts);
-				// e setto lo stato per far comparire un messaggio adeguato a false
+				setSearchedProducts(data);
 				setNoResults(false);
 			}
-			// resetto il campo dell'input
-			// queryRef.current.value = "";
+			// } else {
+			// 		const response = await fetch(
+			// 			`${apiUrl}/products?search=${query?.toLowerCase()}`
+			// 		);
+			// 		const data = await response.json();
+			// 		console.log(data);
+			// 		if (data.length === 0) {
+			// 			setSearchedProducts([]);
+			// 			setNoResults(true);
+			// 		} else {
+			// 			setSearchedProducts(data);
+			// 			setNoResults(false);
+			// 		}
+			// 	}
+			// const findedProducts = products.filter((p) =>
+			// 	p.title.toLowerCase().includes(query?.toLowerCase())
+			// );
+			// // se l'array di prodotti cercati è vuoto
+			// if (findedProducts.length === 0) {
+			// 	// setto i prodotti con [] e setto lo stato per far comparire un messaggio adeguato a true
+			// 	setSearchedProducts([]);
+			// 	setNoResults(true);
+			// } else {
+			// 	// setto i prodotti con l'array di prodotti trovati
+			// 	setSearchedProducts(findedProducts);
+			// 	// e setto lo stato per far comparire un messaggio adeguato a false
+			// 	setNoResults(false);
+			// }
+			// // resetto il campo dell'input
+			// // queryRef.current.value = "";
 		}
 	}
 	// console.log(searchedProducts);
@@ -91,24 +121,28 @@ export default function Homepage() {
 	// filtraggio prodotti per categoria
 	async function filterProducts(e) {
 		setSelectedCategory(e.target.value);
-		console.log("query", query);
-		console.log(e.target.value.toLowerCase());
 
 		if (!query) {
-			const apiUrl = "http://localhost:3001";
 			const response = await fetch(
 				`${apiUrl}/products?category=${e.target.value?.toLowerCase()}`
 			);
 			const data = await response.json();
-			console.log(data);
+			// console.log(data);
 			setSearchedProducts(data);
 			setNoResults(false);
 		}
 
-		if (query && e.target.value == "Seleziona categoria") {
-			const apiUrl = "http://localhost:3001";
+		if (!query && e.target.value === "Seleziona categoria") {
+			const response = await fetch(`${apiUrl}/products`);
+			const data = await response.json();
+			// console.log(data);
+			setSearchedProducts(data);
+			setNoResults(false);
+		}
+
+		if (query && e.target.value === "Seleziona categoria") {
 			const response = await fetch(
-				`${apiUrl}/products?search=${query.toLowerCase()}`
+				`${apiUrl}/products?search=${query?.toLowerCase()}`
 			);
 			const data = await response.json();
 			// console.log(data);
@@ -117,7 +151,6 @@ export default function Homepage() {
 		}
 
 		if (query?.trim() && e.target.value != "Seleziona categoria") {
-			const apiUrl = "http://localhost:3001";
 			const response = await fetch(
 				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${
 					e.target.value
@@ -136,7 +169,6 @@ export default function Homepage() {
 		}
 
 		if (query?.trim() && !e.target.value) {
-			const apiUrl = "http://localhost:3001";
 			const response = await fetch(
 				`${apiUrl}/products?search=${query?.toLowerCase()}`
 			);
@@ -235,10 +267,10 @@ export default function Homepage() {
 			</div>
 			{/* bottone per avviare la ricerca e resettare la lista  */}
 			<div className="mt-2">
-				<button className="btn btn-primary" onClick={searchProduct}>
+				{/* <button className="btn btn-primary" onClick={searchProduct}>
 					Cerca
-				</button>
-				<button className="btn btn-primary ms-2" onClick={resetResearch}>
+				</button> */}
+				<button className="btn btn-primary mt-2" onClick={resetResearch}>
 					Torna alla lista intera
 				</button>
 			</div>
