@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function useProducts() {
 	const apiUrl = "http://localhost:3001";
 	const [products, setProducts] = useState([]);
-	const [product, setProduct] = useState("");
+	// const [product, setProduct] = useState("");
 
 	//stato per controllare i prodotti con il like
 	const [likedProducts, setLikedProducts] = useState([]);
@@ -39,23 +39,12 @@ export default function useProducts() {
 		try {
 			const response = await fetch(`${apiUrl}/products/${id}`);
 			const data = await response.json();
-			setProduct(data.product);
+			const product = data.product;
+			return product;
+			// setProduct(data.product);
 		} catch (error) {
 			console.error("Errore nel recupero dei prodotti: ", error);
-		}
-	}
-
-	// fetch per recuperare tutti i dati di un prodotto partendo dal suo ID
-	async function fetchDetailProduct(productId) {
-		try {
-			const response = await fetch(
-				`http://localhost:3001/products/${productId}`
-			);
-			const data = await response.json();
-			// console.log(data.product);
-			return data.product;
-		} catch (error) {
-			console.error(error);
+			return null;
 		}
 	}
 
@@ -216,31 +205,35 @@ export default function useProducts() {
 		return 0; // se l'ordine non corrisponde a nessuna opzione
 	});
 
+	function backgroundColorBadge(category) {
+		if (category === "Laptop") {
+			return "laptop";
+		} else if (category === "Tablet") {
+			return "tablet";
+		} else if (category === "Smartphone") {
+			return "smartphone";
+		} else return "bg-white";
+	}
+
 	return {
 		products,
-		setProducts,
-		product,
-		setProduct,
 		showProduct,
 		handleClick,
 		likedProducts,
 		isProductLiked,
 		findProductByTitle,
-		fetchDetailProduct,
 		categories,
 		selectedCategory,
-		setSelectedCategory,
+		filterProducts,
+		searchProduct,
 		query,
-		setQuery,
 		searchedProducts,
 		setSearchedProducts,
 		noResults,
-		setNoResults,
 		selectedOrder,
 		setSelectedOrder,
 		sortedProducts,
-		searchProduct,
-		filterProducts,
 		resetResearch,
+		backgroundColorBadge,
 	};
 }

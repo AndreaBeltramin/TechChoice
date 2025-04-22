@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
-import { useState, useRef } from "react";
 import Card from "../components/Card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,38 +7,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Homepage() {
 	const {
 		products,
+		setSearchedProducts,
+		query,
+		searchProduct,
 		categories,
 		selectedCategory,
-		setSelectedCategory,
-		query,
-		setQuery,
-		searchedProducts,
-		setSearchedProducts,
+		filterProducts,
 		noResults,
-		setNoResults,
 		selectedOrder,
 		setSelectedOrder,
 		sortedProducts,
-		searchProduct,
-		filterProducts,
 		resetResearch,
 	} = useContext(GlobalContext);
-
-	// const [searchedProducts, setSearchedProducts] = useState([]);
-
-	// const [noResults, setNoResults] = useState(false);
-
-	// query che inserisce l'utente
-	// const [query, setQuery] = useState("");
-
-	// select della categoria del prodotto
-	// const [selectedCategory, setSelectedCategory] = useState(
-	// 	"Seleziona categoria"
-	// );
-	// console.log(selectedCategory);
-
-	// select dell'ordine delle card
-	// const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
 
 	useEffect(() => {
 		setSearchedProducts(products);
@@ -65,7 +44,7 @@ export default function Homepage() {
 			<div className="d-md-flex">
 				{/* input di ricerca */}
 				<input
-					className="mt-2 me-2 input"
+					className="mt-2 me-2 input-home"
 					type="text"
 					placeholder="Cerca per nome..."
 					aria-label="Search"
@@ -74,7 +53,7 @@ export default function Homepage() {
 				/>
 				{/* select per filtrare per categoria */}
 				<select
-					className="mt-2 me-2 input"
+					className="mt-2 me-2 input-home"
 					value={selectedCategory}
 					onChange={filterProducts}
 				>
@@ -90,7 +69,7 @@ export default function Homepage() {
 				</select>
 				{/* select per ordinare i prodotti */}
 				<select
-					className="mt-2 input"
+					className="mt-2 input-home"
 					value={selectedOrder}
 					onChange={(e) => setSelectedOrder(e.target.value)}
 				>

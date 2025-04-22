@@ -1,13 +1,22 @@
+import { useContext, useEffect } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 import { Link } from "react-router-dom";
 import Heart from "./Heart";
 import Description from "./Description";
 
 export default function ComparisonCard({ prop }) {
+	const { backgroundColorBadge } = useContext(GlobalContext);
 	return (
 		<div className="card ">
 			<div className="row mb-2">
 				<div className="col-6 text-start ">
-					<span className="badge text-bg-light mt-2 ms-2">{prop.category}</span>
+					<span
+						className={`badge text-bg-light mt-2 ms-2 p-2 ${backgroundColorBadge(
+							prop.category
+						)}`}
+					>
+						{prop.category}
+					</span>
 				</div>
 				<div className="col-6 text-end">
 					{/* icona del cuore */}

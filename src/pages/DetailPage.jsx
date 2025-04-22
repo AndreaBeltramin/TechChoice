@@ -7,14 +7,11 @@ import Description from "../components/Description";
 
 export default function DetailPage() {
 	const { id } = useParams();
-	const {
-		products,
-		showProduct,
-		product,
-		findProductByTitle,
-		fetchDetailProduct,
-	} = useContext(GlobalContext);
+	const { products, showProduct, findProductByTitle } =
+		useContext(GlobalContext);
 	// console.log(product);
+
+	const [product, setProduct] = useState("");
 
 	// stato per i dati del secondo prodotto
 	const [secondProductData, setSecondProductData] = useState(null);
@@ -22,10 +19,22 @@ export default function DetailPage() {
 	// stato per i dati del terzo prodotto
 	const [thirdProductData, setThirdProductData] = useState(null);
 
+	const handleProduct = async (id) => {
+		try {
+			const productData = await showProduct(id);
+			//se c'è un prodotto recupero tutti i suoi dati
+			setProduct(productData);
+			// console.log(product);
+		} catch (error) {
+			console.error(error);
+			setProduct(null);
+		}
+	};
+
 	// al montaggio del componente recupero i dati del prodotto
 	useEffect(() => {
-		showProduct(id);
-	}, []);
+		handleProduct(id);
+	}, [id]);
 
 	// funzione per recuperare il secondo prodotto dalla selezione dell'utente e ricercare il prodotto dal titolo
 	const handleSecondProduct = async (event) => {
@@ -35,7 +44,7 @@ export default function DetailPage() {
 			// se non c'è un prodotto selezionato mi fermo
 			if (!selectedProduct) return;
 			//se c'è un prodotto recupero tutti i suoi dati
-			const secondProduct = await fetchDetailProduct(selectedProduct.id);
+			const secondProduct = await showProduct(selectedProduct.id);
 			setSecondProductData(secondProduct);
 		} catch (error) {
 			console.error(error);
@@ -51,7 +60,7 @@ export default function DetailPage() {
 			// se non c'è un prodotto selezionato fermo
 			if (!selectedProduct) return;
 			//se c'è un prodotto recupero tutti i suoi dati
-			const thirdProduct = await fetchDetailProduct(selectedProduct.id);
+			const thirdProduct = await showProduct(selectedProduct.id);
 			// console.log(thirdProduct);
 			setThirdProductData(thirdProduct);
 		} catch (error) {
@@ -94,7 +103,11 @@ export default function DetailPage() {
 						</div>
 						<div className="text-center">
 							{/* mostro l'immagine del prodotto */}
-							<img src={product.image} alt={product.title} />
+							<img
+								src={product.image}
+								alt={product.title}
+								className="img-fluid"
+							/>
 						</div>
 
 						<div className="text-center mt-2">
@@ -151,7 +164,7 @@ export default function DetailPage() {
 						<div className="d-flex justify-content-center">
 							<select onChange={handleSecondProduct} className="p-2 mt-2">
 								<option defaultValue="Seleziona un dispositivo">
-									Seleziona {product.category.toLowerCase()}
+									Seleziona un dispositivo
 								</option>
 								{products.map((p) => (
 									<option key={p.id}>{p.title}</option>
@@ -181,7 +194,7 @@ export default function DetailPage() {
 								<div className="d-flex justify-content-center ">
 									<select onChange={handleThirdProduct} className="p-2 mt-2">
 										<option defaultValue="Seleziona un dispositivo">
-											Seleziona {product.category.toLowerCase()}
+											Seleziona un dispositivo
 										</option>
 										{products.map((p) => (
 											<option key={p.id}>{p.title}</option>
