@@ -5,7 +5,7 @@ import { GlobalProvider } from "./context/GlobalContext";
 import Homepage from "./pages/HomePage";
 import DetailPage from "./pages/DetailPage";
 import LikedProductsPage from "./pages/LikedProductsPage";
-import CompareProductsPage from "./CompareProductsPage";
+import CompareProductsPage from "./pages/CompareProductsPage";
 
 function App() {
 	return (
