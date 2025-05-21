@@ -8,7 +8,6 @@ export default function Homepage() {
 	const {
 		products,
 		setSearchedProducts,
-		query,
 		searchProduct,
 		categories,
 		selectedCategory,
@@ -24,7 +23,7 @@ export default function Homepage() {
 		setSearchedProducts(products);
 	}, [products]);
 
-	// se non ci sono prodotti mostro un messaggio appropriato
+	// se non ci sono prodotti mostro un messaggio appropriato di caricamento
 	if (products.length === 0) {
 		return (
 			<div className="spinner-container">
@@ -36,7 +35,7 @@ export default function Homepage() {
 	}
 
 	return (
-		<div className="container-md mt-4 mb-5">
+		<div className="container-md mt-4 homepage">
 			<div className="title">
 				<h1>Scopri i migliori prodotti tecnologici del momento!</h1>
 				<h3>Ti aiuteremo a scegliere quello perfetto per te</h3>
@@ -48,8 +47,7 @@ export default function Homepage() {
 					type="text"
 					placeholder="Cerca per nome..."
 					aria-label="Search"
-					value={query}
-					onChange={searchProduct}
+					onChange={(e) => searchProduct(e.target.value)}
 				/>
 				{/* select per filtrare per categoria */}
 				<select
@@ -85,12 +83,9 @@ export default function Homepage() {
 					</option>
 				</select>
 			</div>
-			{/* bottone per avviare la ricerca e resettare la lista  */}
+			{/* bottone per resettare la lista  */}
 			<div className="mt-2">
-				{/* <button className="btn btn-primary" onClick={searchProduct}>
-					Cerca
-				</button> */}
-				<button className="btn btn-primary mt-2" onClick={resetResearch}>
+				<button className="btn btn-secondary mt-2" onClick={resetResearch}>
 					Torna alla lista intera
 				</button>
 			</div>

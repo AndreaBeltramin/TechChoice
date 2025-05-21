@@ -1,9 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Link } from "react-router-dom";
 import Heart from "./Heart";
+import React from "react";
 
-export default function Card({ prop }) {
+function Card({ prop }) {
 	const { backgroundColorBadge } = useContext(GlobalContext);
 	return (
 		<div className="card homepage-card h-100">
@@ -25,9 +26,14 @@ export default function Card({ prop }) {
 					{/* link per aprire la pagina di dettaglio del singolo prodotto */}
 					<Link className="card-body" to={`/products/${prop.id}`}>
 						<h5 className="card-title">{prop.title}</h5>
+						{prop.image && (
+							<img src={prop.image} alt="img" className="img-fluid w-50 p-2" />
+						)}
 					</Link>
 				</div>
 			</div>
 		</div>
 	);
 }
+
+export default React.memo(Card);

@@ -1,11 +1,13 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Link } from "react-router-dom";
 import Heart from "./Heart";
 import Description from "./Description";
+import React from "react";
 
-export default function ComparisonCard({ prop }) {
+function ComparisonCard({ prop }) {
 	const { backgroundColorBadge } = useContext(GlobalContext);
+	// console.log("Rendering Card:", prop.id);
 	return (
 		<div className="card ">
 			<div className="row mb-2">
@@ -33,7 +35,7 @@ export default function ComparisonCard({ prop }) {
 			</div>
 
 			<Link to={`/products/${prop.id}`}>
-				<div className="card-body">
+				<div className="card-body h-100">
 					<div className="image-product">
 						<img src={prop.image} alt={prop.title} className="img-fluid" />
 					</div>
@@ -45,3 +47,4 @@ export default function ComparisonCard({ prop }) {
 		</div>
 	);
 }
+export default React.memo(ComparisonCard);

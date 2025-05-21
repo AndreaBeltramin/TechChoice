@@ -1,29 +1,49 @@
 import { useState, useEffect } from "react";
+import { debounce } from "lodash";
+import { useCallback } from "react";
 
 export default function useProducts() {
-	const apiUrl = "http://localhost:3001";
+	const apiUrl = import.meta.env.VITE_API_URL;
 	const [products, setProducts] = useState([]);
-	// const [product, setProduct] = useState("");
 
-	//stato per controllare i prodotti con il like
+	// stato per controllare i prodotti con il like
 	const [likedProducts, setLikedProducts] = useState([]);
 
+	// leggo i prodotti salvati nel localStorage
+	useEffect(() => {
+		const likedProducts = JSON.parse(localStorage.getItem("likedProducts"));
+		if (likedProducts) {
+			setLikedProducts(likedProducts);
+		}
+	}, []);
+
+	// salvo i prodotti nel localStorage
+	useEffect(() => {
+		localStorage.setItem("likedProducts", JSON.stringify(likedProducts));
+	}, [likedProducts]);
+
+	// stato per controllare i prodotti cercati
 	const [searchedProducts, setSearchedProducts] = useState([]);
+
+	// stato per quando non ci sono risultati
 	const [noResults, setNoResults] = useState(false);
-	// query che inserisce l'utente
+
+	// stato per controllare la query che inserisce l'utente
 	const [query, setQuery] = useState("");
-	// select della categoria del prodotto
+
+	// stato per controllare la select della categoria del prodotto
 	const [selectedCategory, setSelectedCategory] = useState(
 		"Seleziona categoria"
 	);
-	// select dell'ordine delle card
+
+	// stato per controllare la select dell'ordine delle card
 	const [selectedOrder, setSelectedOrder] = useState("Ordina per...");
 
 	useEffect(() => {
 		fetchProducts();
 	}, []);
 
-	// fetch per ottenere la lista di tutti i prodotti
+	// fetch per ottenere la lista di tutti i prodotti (con proprietà principali : id, name, category, created at)
 	async function fetchProducts() {
 		try {
 			const response = await fetch(`${apiUrl}/products`);
@@ -34,67 +54,53 @@ export default function useProducts() {
 		}
 	}
 
-	// fetch per otttenere un singolo prodotto
-	async function showProduct(id) {
-		try {
-			const response = await fetch(`${apiUrl}/products/${id}`);
-			const data = await response.json();
-			const product = data.product;
-			return product;
-			// setProduct(data.product);
-		} catch (error) {
-			console.error("Errore nel recupero dei prodotti: ", error);
-			return null;
-		}
-	}
+	// fetch per otttenere un singolo prodotto con tutte le sue proprietà
+	const showProduct = useCallback(
+		async (id) => {
+			try {
+				const response = await fetch(`${apiUrl}/products/${id}`);
+				const data = await response.json();
+				const product = data.product;
+				return product;
+			} catch (error) {
+				console.error("Errore nel recupero dei prodotti: ", error);
+				return null;
+			}
+		},
+		[apiUrl]
+	);
 
 	// aggiunta prodotti ai preferiti
-	function handleClick(productId) {
-		// trovo il prodotto partendo dall'id
-		const productClicked = products.find((p) => p.id === productId);
+	async function handleClick(productId) {
+		const productClicked = await showProduct(productId);
 		// console.log(productClicked);
 
-		// controllo se il prodotto cliccato è incluso nell'array di prodotti con il mi piace
-		const isLiked = likedProducts.includes(productClicked);
+		// controllo se il prodotto cliccato è incluso nell'array di prodotti con like
+		const isLiked = likedProducts.some((p) => p.id === productId);
+		// console.log(isLiked);
 
-		// se non era già incluso nell'array
-		if (!isLiked) {
-			// aggiungo il prodotto cliccato all'array di prodotti col mi piace
-			setLikedProducts([...likedProducts, productClicked]);
+		// se era già incluso nell'array
+		if (isLiked) {
+			// filtro l'array dei prodotti con like togliendo il prodotto cliccato
+			setLikedProducts((prev) => prev.filter((p) => p.id !== productId));
 		} else {
-			// altrimenti filtro l'array dei prodotti con il mi piace togliendo il prodotto cliccato
-			setLikedProducts(likedProducts.filter((p) => p.id !== productId));
+			// aggiungo il prodotto cliccato all'array di prodotti con like
+			setLikedProducts((prev) => [...prev, productClicked]);
+			// console.log(likedProducts);
 		}
 	}
 
-	// funzione per controllare se un prodotto cliccato è nella lista dei prodotti col mi piace
+	// funzione per controllare se un prodotto cliccato è nella lista dei prodotti con like
 	function isProductLiked(id) {
-		const productLiked = products.find((p) => p.id === id);
-		// controllo se è incluso nell'array dei prodotti col mi piace
-		return likedProducts.includes(productLiked);
+		// controllo se è incluso nell'array dei prodotti col like
+		return likedProducts.some((p) => p.id === id);
 	}
 
-	// funzione per recuperare i dati dell'oggetto dal titolo
-	const findProductByTitle = (title) => {
-		return products.find((p) => p.title === title);
-	};
-
-	// funzione per prendere tutte le categorie dai prodotti
-	const allCategories = products.map((p) => p.category);
-	let categories = [];
-	allCategories.forEach((category) => {
-		if (!categories.includes(category)) {
-			categories.push(category);
-		}
-	});
-	// console.log(categories);
-
-	// funzione per cercare i prodotti
-	async function searchProduct(e) {
+	const debouncedSearchInput = debounce(async (inputValue) => {
 		// mi recupero il valore inserito dall'utente
-		setQuery(e.target.value);
-		const currentQuery = e.target.value.toLowerCase();
+		const currentQuery = inputValue.toLowerCase();
 		// console.log(currentQuery);
+		setQuery(currentQuery);
 
 		// se c'è la query dell'utente ma la categoria non è selezionata
 		if (currentQuery && selectedCategory === "Seleziona categoria") {
@@ -115,8 +121,11 @@ export default function useProducts() {
 			// console.log(data);
 			setSearchedProducts(data);
 			setNoResults(data.length === 0);
-		} else if (!currentQuery && selectedCategory !== "Seleziona categoria") {
-			// se non c'è una query e non c'è una categoria selezionata
+		} else if (
+			// se non c'è una query inserita dall'utente ma c'è una categoria selezionata
+			!currentQuery &&
+			selectedCategory !== "Seleziona categoria"
+		) {
 			const response = await fetch(
 				`${apiUrl}/products?category=${selectedCategory}`
 			);
@@ -128,23 +137,32 @@ export default function useProducts() {
 			setSearchedProducts(products);
 			setNoResults(false);
 		}
-	}
+	}, 500);
+
+	// funzione per cercare i prodotti
+	const searchProduct = useCallback(debouncedSearchInput, [
+		selectedCategory,
+		apiUrl,
+		products,
+		debouncedSearchInput,
+	]);
 	// console.log(searchedProducts);
 
 	// filtraggio prodotti per categoria
 	async function filterProducts(e) {
-		setSelectedCategory(e.target.value);
+		// mi recupero la categoria selezionata
 		const currentCategory = e.target.value;
-		// non c'è una query dell'utente
+		setSelectedCategory(e.target.value);
+
+		// se la categoria non è selezionata e non c'è una query dell'utente
 		if (currentCategory === "Seleziona categoria" && !query) {
-			const response = await fetch(
-				`${apiUrl}/products?search=${query?.toLowerCase()}`
-			);
-			const data = await response.json();
-			// console.log(data);
-			setSearchedProducts(data);
-			setNoResults(data.length === 0);
-		} else if (!query) {
+			// restituisco tutti i prodotti
+			setSearchedProducts(products);
+			setNoResults(false);
+		}
+		// se non c'è una query dell'utente
+		else if (!query) {
+			// cerco tutti i prodotti della categoria selezionata
 			const response = await fetch(
 				`${apiUrl}/products?category=${currentCategory}`
 			);
@@ -156,6 +174,7 @@ export default function useProducts() {
 			// se la categoria è uguale a seleziona categoria
 			currentCategory === "Seleziona categoria"
 		) {
+			// cerco tutti i prodotti secondo la query che mette l'utente
 			const response = await fetch(`${apiUrl}/products?search=${query}`);
 			const data = await response.json();
 			// console.log(data);
@@ -163,9 +182,10 @@ export default function useProducts() {
 			setNoResults(data.length === 0);
 		} else if (
 			// se c'è la query e c'è una categoria selezionata
-			query?.trim() &&
+			query &&
 			currentCategory !== "Seleziona categoria"
 		) {
+			// cerco tutti i prodotti con quel nome e di quella categoria
 			const response = await fetch(
 				`${apiUrl}/products?search=${query?.toLowerCase()}&category=${currentCategory}`
 			);
@@ -175,6 +195,7 @@ export default function useProducts() {
 			setNoResults(data.length === 0);
 		}
 	}
+
 	// funzione per resettare la ricerca
 	function resetResearch() {
 		// setto la lista di prodotti iniziale
@@ -205,6 +226,17 @@ export default function useProducts() {
 		return 0; // se l'ordine non corrisponde a nessuna opzione
 	});
 
+	// funzione per prendere tutte le categorie dai prodotti
+	const allCategories = products.map((p) => p.category);
+	let categories = [];
+	allCategories.forEach((category) => {
+		if (!categories.includes(category)) {
+			categories.push(category);
+		}
+	});
+	// console.log(categories);
+
+	// funzione per cambiare il colore del badge delle card secondo la diversa categoria
 	function backgroundColorBadge(category) {
 		if (category === "Laptop") {
 			return "laptop";
@@ -212,8 +244,32 @@ export default function useProducts() {
 			return "tablet";
 		} else if (category === "Smartphone") {
 			return "smartphone";
-		} else return "bg-white";
+		} else return "bg-white"; // di default
 	}
+
+	// funzione per recuperare un prodotto dalla selezione partendo dal suo titolo
+	// accetta l'evento della select e uno setState in modo da centralizzare la ricerca dei prodotti
+	const handleProductSelection = useCallback(
+		async (event, setProductData) => {
+			try {
+				const selectedProductId = event.target.value;
+				// console.log(selectedProductId);
+
+				// se non c'è un prodotto selezionato o è selezionato il valore di default
+				if (!selectedProductId) {
+					setProductData(null);
+					return;
+				}
+				//se c'è un prodotto recupero tutti i suoi dati
+				const productData = await showProduct(selectedProductId);
+				setProductData(productData);
+			} catch (error) {
+				console.error(error);
+				setProductData(null);
+			}
+		},
+		[showProduct]
+	);
 
 	return {
 		products,
@@ -221,7 +277,6 @@ export default function useProducts() {
 		handleClick,
 		likedProducts,
 		isProductLiked,
-		findProductByTitle,
 		categories,
 		selectedCategory,
 		filterProducts,
@@ -235,5 +290,6 @@ export default function useProducts() {
 		sortedProducts,
 		resetResearch,
 		backgroundColorBadge,
+		handleProductSelection,
 	};
 }

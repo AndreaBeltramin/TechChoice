@@ -1,0 +1,24 @@
+export type Product = {
+	id: number;
+	title: string;
+	brand: string;
+	image: string;
+	category: string;
+	release_year: number;
+	price: number;
+	display: string;
+	cameras: string;
+	storage: string;
+	chip: string;
+	sim: string;
+	bluetooth: number;
+	port: string;
+	network_connectivity: string;
+	battery: string;
+	weight: string;
+	dimensions: string;
+	operating_system: string;
+	description?: string;
+	color?: string;
+	materials?: string;
+};

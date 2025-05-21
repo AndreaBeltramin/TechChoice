@@ -12,42 +12,38 @@ export default function CompareProductsPage() {
 		scrollToFirstProduct();
 	}, []);
 
+	const { products, handleProductSelection } = useContext(GlobalContext);
+
 	const location = useLocation();
+	// recupero i prodotti dalla pagina di dettaglio
 	const { product1, product2, product3 } = location.state || {};
-	const { products, findProductByTitle, showProduct } =
-		useContext(GlobalContext);
 
-	const [firstProductData, setFirstProductData] = useState(null || product1);
-	const [secondProductData, setSecondProductData] = useState(null || product2);
-	const [thirdProductData, setThirdProductData] = useState(null || product3);
+	// setto gli stati per i prodotti
+	const [firstProductData, setFirstProductData] = useState(product1 || null);
+	const [secondProductData, setSecondProductData] = useState(product2 || null);
+	const [thirdProductData, setThirdProductData] = useState(product3 || null);
 
+	// stato per controllare la comparsa della select del terzo prodotto
 	const [show, setShow] = useState(false);
+	// stato per controllare se è cliccato il bottone per aggiungere un terzo elemento
 	const [isClicked, setIsClicked] = useState(false);
 
+	// funzione per scrollare al primo prodotto
 	const firstProductRef = useRef(null);
 	function scrollToFirstProduct() {
-		firstProductRef.current?.scrollIntoView({ behavior: "smooth" });
+		firstProductRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+		});
 	}
 
-	// funzione per recuperare il terzo prodottto dalla selezione dell'utente e ricercare il prodotto dal titolo
-	const handleFirstProduct = async (event) => {
-		try {
-			const selectedProduct = findProductByTitle(event.target.value);
-			// console.log(selectedProduct);
-			// se non c'è un prodotto selezionato fermo
-			if (!selectedProduct) return;
-			//se c'è un prodotto recupero tutti i suoi dati
-			const firstProduct = await showProduct(selectedProduct.id);
-			setFirstProductData(firstProduct);
-		} catch (error) {
-			console.error(error);
-			setFirstProductData(null);
-		}
-	};
-
+	// funzione per scrollare al secondo prodotto
 	const secondProductRef = useRef(null);
 	function scrollToSecondProduct() {
-		secondProductRef.current?.scrollIntoView({ behavior: "smooth" });
+		secondProductRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+		});
 	}
 
 	useEffect(() => {
@@ -56,25 +52,13 @@ export default function CompareProductsPage() {
 		}
 	}, [firstProductData]);
 
-	// funzione per recuperare il secondo prodotto dalla selezione dell'utente e ricercare il prodotto dal titolo
-	const handleSecondProduct = async (event) => {
-		try {
-			const selectedProduct = findProductByTitle(event.target.value);
-			// console.log(selectedProduct);
-			// se non c'è un prodotto selezionato mi fermo
-			if (!selectedProduct) return;
-			//se c'è un prodotto recupero tutti i suoi dati
-			const secondProduct = await showProduct(selectedProduct.id);
-			setSecondProductData(secondProduct);
-		} catch (error) {
-			console.error(error);
-			setSecondProductData(null);
-		}
-	};
-
+	// funzione per scrollare al terzo prodotto
 	const thirdProductRef = useRef(null);
 	function scrollToThirdProduct() {
-		thirdProductRef.current?.scrollIntoView({ behavior: "smooth" });
+		thirdProductRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+		});
 	}
 
 	useEffect(() => {
@@ -83,33 +67,27 @@ export default function CompareProductsPage() {
 		}
 	}, [show]);
 
-	// funzione per recuperare il terzo prodottto dalla selezione dell'utente e ricercare il prodotto dal titolo
-	const handleThirdProduct = async (event) => {
-		try {
-			const selectedProduct = findProductByTitle(event.target.value);
-			// console.log(selectedProduct);
-			// se non c'è un prodotto selezionato fermo
-			if (!selectedProduct) return;
-			//se c'è un prodotto recupero tutti i suoi dati
-			const thirdProduct = await showProduct(selectedProduct.id);
-			// console.log(thirdProduct);
-			setThirdProductData(thirdProduct);
-		} catch (error) {
-			console.error(error);
-			setThirdProductData(null);
-		}
-	};
-
 	function handleClick() {
 		setIsClicked(true);
 		setShow(true);
 		scrollToThirdProduct();
 	}
 
+	useEffect(() => {
+		if (product3) {
+			setIsClicked(true);
+			setShow(true);
+		} else if (product1 && product2) {
+			setIsClicked(false);
+			setShow(false);
+		}
+	}, [product1, product2, product3]);
+
 	return (
-		<div className="container-md my-4">
-			<div ref={firstProductRef}>
-				<h1>Comparazione prodotti</h1>
+		<div className="container-md mt-4">
+			{/* titolo  */}
+			<div>
+				<h1 ref={firstProductRef}>Comparazione prodotti</h1>
 				<h3>Seleziona fino a tre prodotti per confrontarli</h3>
 			</div>
 			<div
@@ -117,135 +95,123 @@ export default function CompareProductsPage() {
 					isClicked == true || product3 ? "row-cols-lg-3" : "row-cols-lg-2"
 				}`}
 			>
-				<div className="col">
-					{/* select primo prodotto */}
-					<select className="me-2 mt-2 input" onChange={handleFirstProduct}>
-						<option defaultValue="Seleziona un prodotto">
-							{product1 ? product1.title : "Seleziona un prodotto"}
-						</option>
-						{products.map((p) => (
-							<option key={p.id}>{p.title}</option>
-						))}
+				{/* select primo prodotto */}
+				<div className="col h-100">
+					<select
+						className="me-2 mt-2 input"
+						onChange={(e) => handleProductSelection(e, setFirstProductData)}
+						value={firstProductData?.id || ""}
+					>
+						<option value="">Seleziona un prodotto</option>
+						{/* creo dinamicamente le opzioni riordinando i prodotti in ordine alfabetico e togliendo dalla lista i prodotti già selezionati */}
+						{[...products]
+							.sort((a, b) => a.title.localeCompare(b.title))
+							.filter(
+								(p) =>
+									p.id !== secondProductData?.id &&
+									p.id !== thirdProductData?.id
+							)
+							.map((p) => (
+								<option key={p.id} value={p.id}>
+									{p.title}
+								</option>
+							))}
 					</select>
-					{/* primo prodotto */}
+					{/* card primo prodotto */}
 					<div className="mt-4 text-center">
 						{firstProductData && <ComparisonCard prop={firstProductData} />}
 					</div>
 				</div>
 
-				{!product3 ? (
-					<>
-						<div className="col">
-							{/* select secondo prodotto */}
-							<div className="d-flex justify-content-between">
-								<select
-									className="input mt-2"
-									onChange={handleSecondProduct}
-									disabled={!firstProductData}
-									ref={secondProductRef}
-								>
-									<option defaultValue="Seleziona secondo prodotto">
-										{product2 ? product2.title : "Seleziona secondo prodotto"}
+				{/* select secondo prodotto */}
+				<div className="col h-100">
+					<div
+						className="d-flex justify-content-between"
+						ref={secondProductRef}
+					>
+						<select
+							className="input mt-2"
+							onChange={(e) => handleProductSelection(e, setSecondProductData)}
+							value={secondProductData?.id || ""}
+							disabled={!firstProductData}
+						>
+							<option value="">Seleziona secondo prodotto</option>
+							{/* creo dinamicamente le opzioni riordinando i prodotti in ordine alfabetico e togliendo dalla lista i prodotti già selezionati */}
+							{[...products]
+								.sort((a, b) => a.title.localeCompare(b.title))
+								.filter(
+									(p) =>
+										p.id !== firstProductData?.id &&
+										p.id !== thirdProductData?.id
+								)
+								.map((p) => (
+									<option key={p.id} value={p.id}>
+										{p.title}
 									</option>
-									{products.map((p) => (
-										<option key={p.id}>{p.title}</option>
-									))}
-								</select>
-								{secondProductData && (
-									<button
-										className={`btn btn-outline-secondary input-compare-products mt-2 ${
-											isClicked ? "d-none" : ""
-										}`}
-										onClick={handleClick}
-									>
-										{window.innerWidth < 1440 ? (
-											<FontAwesomeIcon icon={faPlus} />
-										) : (
-											"Vuoi selezionare un altro dispositivo?"
-										)}
-									</button>
-								)}
-							</div>
-							{/* secondo prodotto */}
-							<div className="mt-4 text-center">
-								{secondProductData && (
-									<ComparisonCard prop={secondProductData} />
-								)}
-							</div>
-						</div>
-						{show && (
-							<div className="col">
-								{/* select terzo prodotto  */}
-								<select
-									className="input mt-2"
-									onChange={handleThirdProduct}
-									ref={thirdProductRef}
-								>
-									<option defaultValue="Seleziona terzo prodotto">
-										{product3 ? product3.title : "Seleziona terzo prodotto"}
-									</option>
-									{products.map((p) => (
-										<option key={p.id}>{p.title}</option>
-									))}
-								</select>
-								{/* terzo prodotto */}
-								<div className="mt-4 text-center">
-									{thirdProductData && (
-										<ComparisonCard prop={thirdProductData} />
-									)}
-								</div>
-								<div className="mt-4 text-center">
-									<button
-										className="btn btn-primary"
-										onClick={scrollToFirstProduct}
-									>
-										Torna su
-									</button>
-								</div>
-							</div>
-						)}
-					</>
-				) : (
-					<>
-						<div className="col">
-							{/* select secondo prodotto */}
-							<div>
-								<select
-									className="input mt-2"
-									onChange={handleSecondProduct}
-									ref={secondProductRef}
-								>
-									<option defaultValue="Seleziona secondo prodotto">
-										{product2 ? product2.title : "Seleziona secondo prodotto"}
-									</option>
-									{products.map((p) => (
-										<option key={p.id}>{p.title}</option>
-									))}
-								</select>
-							</div>
-							{/* secondo prodotto */}
-							<div className="mt-4 text-center">
-								{secondProductData && (
-									<ComparisonCard prop={secondProductData} />
-								)}
-							</div>
-						</div>
-						<div className="col" ref={thirdProductRef}>
-							{/* select terzo prodotto  */}
-							<select className="input mt-2" onChange={handleThirdProduct}>
-								<option defaultValue="Seleziona terzo prodotto">
-									{product3 ? product3.title : "Seleziona terzo prodotto"}
-								</option>
-								{products.map((p) => (
-									<option key={p.id}>{p.title}</option>
 								))}
-							</select>
-							{/* terzo prodotto */}
-							<div className="mt-4 text-center">
-								{thirdProductData && <ComparisonCard prop={thirdProductData} />}
-							</div>
+						</select>
+						{/* bottone per selezionare terzo prodotto */}
+						{secondProductData && !thirdProductData && !isClicked && (
+							<button
+								className="btn btn-outline-secondary input-compare-products mt-2"
+								onClick={handleClick}
+							>
+								{window.innerWidth < 1440 ? (
+									<FontAwesomeIcon icon={faPlus} />
+								) : (
+									"Vuoi selezionare un altro dispositivo?"
+								)}
+							</button>
+						)}
+					</div>
+					{/* card secondo prodotto */}
+					<div className="mt-4 text-center">
+						{secondProductData && <ComparisonCard prop={secondProductData} />}
+					</div>
+				</div>
+
+				{(thirdProductData || isClicked) && (
+					//  select terzo prodotto
+					<div className="col h-100" ref={thirdProductRef}>
+						<select
+							className="input mt-2"
+							onChange={(e) => handleProductSelection(e, setThirdProductData)}
+							value={thirdProductData?.id || ""}
+							disabled={!secondProductData}
+						>
+							<option value="">Seleziona terzo prodotto</option>
+							{/* creo dinamicamente le opzioni riordinando i prodotti in ordine alfabetico e togliendo dalla lista i prodotti già selezionati */}
+							{[...products]
+								.sort((a, b) => a.title.localeCompare(b.title))
+								.filter(
+									(p) =>
+										p.id !== firstProductData?.id &&
+										p.id !== secondProductData?.id
+								)
+								.map((p) => (
+									<option key={p.id} value={p.id}>
+										{p.title}
+									</option>
+								))}
+						</select>
+						{/* card terzo prodotto  */}
+						<div className="mt-4 text-center">
+							{thirdProductData && (
+								<>
+									<ComparisonCard prop={thirdProductData} />
+
+									<div className="mt-4 text-center d-flex justify-content-end">
+										<button
+											className="btn btn-secondary"
+											onClick={scrollToFirstProduct}
+										>
+											Torna su
+										</button>
+									</div>
+								</>
+							)}
 						</div>
-					</>
+					</div>
 				)}
 			</div>
 		</div>
