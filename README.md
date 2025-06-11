@@ -1,12 +1,26 @@
-# React + Vite
+🚀 TechChoice — Semplifica la tua scelta tecnologica
+TechChoice è un progetto nato durante la fase di specializzazione del corso di Web Development che ho seguito. Si tratta di una web app che aiuta gli utenti a consultare, filtrare e confrontare prodotti tecnologici per individuare la soluzione più adatta alle proprie esigenze. 💻📱
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+📌 Funzionalità principali:
 
-Currently, two official plugins are available:
+✔️ Visualizzazione dell’intero catalogo prodotti, con filtri per categoria e ricerca testuale
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+✔️ Ordinamento personalizzabile (alfabetico o per categoria, in ordine crescente o decrescente)
 
-## Expanding the ESLint configuration
+✔️ Sistema di preferiti persistente tramite localStorage, accessibile da qualsiasi sezione dell’app
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+✔️ Pagina di dettaglio per ogni prodotto, con specifiche tecniche complete
+
+✔️ Comparatore dinamico: seleziona da 2 a 3 dispositivi e confrontali affiancati
+
+👨‍💻 Tecnologie e aspetti tecnici
+
+Questo progetto è stato un ottimo esercizio per consolidare l’uso di:
+
+⚛️ React, per la gestione delle interfacce dinamiche
+
+🧠 useState, useEffect e custom hooks, per la logica e la gestione dello stato
+
+💾 localStorage, per la persistenza dei dati lato client
+
+🧩 Rendering e interfaccia condizionale, per offrire un’esperienza utente fluida e intuitiva
